@@ -6,7 +6,7 @@ This project aims to control corporate cards that are used internally.
 
 ### Repos References
 
-- [go-clean-arch](https://github.com/bxcodec/go-clean-arch/tree/master/article)
+- [go-clean-arch](https://github.com/bxcodec/go-clean-arch)
 - [gofiber/recipes](https://github.com/gofiber/recipes/tree/master/clean-architecture)
 
 ### Stack
@@ -14,7 +14,7 @@ This project aims to control corporate cards that are used internally.
 * Golang
 * Fiber
 * Gorm
-* SQLite
+* PostgreSQL
 * Docker
 
 ### Task List
