@@ -9,9 +9,5 @@ func main() {
 	database.ConnectDB()
 	app := fiber.New()
 
-	app.Get("/ping", func(c *fiber.Ctx) error {
-		return c.SendString("Pong")
-	})
-
 	app.Listen(":9090")
 }

@@ -10,6 +10,7 @@ type User struct {
 }
 
 type UserRepository interface {
+	GetByID(ctx context.Context, id string) (User, error)
 	Create(ctx context.Context, input *User) error
 	Update(ctx context.Context, input *User) error
 	Delete(ctx context.Context, id string) error
