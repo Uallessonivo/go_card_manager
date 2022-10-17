@@ -2,7 +2,9 @@ package database
 
 import (
 	"log"
+	"os"
 
+	"github.com/Uallessonivo/go_card_manager/api/repository"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,7 +18,7 @@ type Dbinstance struct {
 var DB Dbinstance
 
 func ConnectDB() {
-	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432"
+	dsn := os.Getenv("DATABASE_DSN")
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
@@ -30,6 +32,8 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
+
+	repository.NewUserRepository(db)
 
 	DB = Dbinstance{
 		Db: db,
