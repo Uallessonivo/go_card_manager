@@ -3,7 +3,7 @@ package database
 import (
 	"log"
 
-	"github.com/Uallessonivo/go_card_manager/domain"
+	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -29,7 +29,7 @@ func ConnectDB() {
 	log.Println("Connected to database")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
-	db.AutoMigrate(&domain.User{}, &domain.Card{}, &domain.Employee{})
+	db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
 
 	DB = Dbinstance{
 		Db: db,
