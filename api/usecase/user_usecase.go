@@ -4,18 +4,24 @@ import (
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
-type UserUseCase struct {
-	UserRepository model.UserRepository
+type userUseCase struct {
+	userRepository model.UserRepository
 }
 
-func (u *UserUseCase) Create(name string, email string, password string) (*model.User, error) {
+func NewUserUseCase(u model.UserRepository) model.UserUseCase {
+	return &userUseCase{
+		userRepository: u,
+	}
+}
+
+func (u *userUseCase) Create(input *model.User) (*model.User, error) {
 	data := model.User{
 		ID:       "sdasdfasdasdas",
-		Name:     name,
-		Email:    email,
-		Password: password,
+		Name:     input.Name,
+		Email:    input.Email,
+		Password: input.Password,
 	}
-	err := u.UserRepository.Create(&data)
+	err := u.userRepository.Create(&data)
 
 	if err != nil {
 		return nil, err

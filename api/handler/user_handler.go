@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"github.com/Uallessonivo/go_card_manager/api/usecase"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	UserUseCase usecase.UserUseCase
+	useCase model.UserUseCase
 }
 
 func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
@@ -17,7 +16,7 @@ func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.UserUseCase.Create(user.Name, user.Email, user.Password)
+	result, err := u.useCase.Create(user)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())

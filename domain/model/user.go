@@ -13,3 +13,7 @@ type UserRepository interface {
 	Update(input *User) error
 	Delete(id string) error
 }
+
+type UserUseCase interface {
+	Create(input *User) (*User, error)
+}
