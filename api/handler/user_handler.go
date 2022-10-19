@@ -10,13 +10,13 @@ type UserHandler struct {
 }
 
 func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
-	user := new(model.User)
+	var user model.User
 
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.useCase.Create(user)
+	result, err := u.useCase.Create(&user)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())
