@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/Uallessonivo/go_card_manager/api/repository"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -32,8 +31,6 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
-
-	repository.NewUserRepository(db)
 
 	DB = Dbinstance{
 		Db: db,

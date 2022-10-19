@@ -1,18 +1,26 @@
 package handler
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	useCase model.UserUseCase
+	useCase interfaces.UserUseCaseInterface
 }
 
-func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
+func UserRoutes(app *fiber.App) {
+	httpHandler := UserHandler{}
+	app.Post("/users", httpHandler.CreateUser)
+}
+
+func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 	var user model.User
 
-	if err := c.BodyParser(user); err != nil {
+	err := c.BodyParser(&user)
+
+	if err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 

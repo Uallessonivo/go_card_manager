@@ -7,13 +7,13 @@ type User struct {
 	Password string `json:"password"`
 }
 
-type UserRepository interface {
-	GetByID(id string) (*User, error)
-	Create(input *User) error
-	Update(input *User) error
-	Delete(id string) error
-}
+func NewUser(name string, email string, password string) (*User, error) {
+	newUser := User{
+		ID:       "sadasdasdasd",
+		Name:     name,
+		Email:    email,
+		Password: password,
+	}
 
-type UserUseCase interface {
-	Create(input *User) (*User, error)
+	return &newUser, nil
 }
