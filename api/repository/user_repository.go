@@ -1,12 +1,17 @@
 package repository
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/gorm"
 )
 
 type UserRepositoryDb struct {
 	Db *gorm.DB
+}
+
+func NewUserRepository(Db *gorm.DB) interfaces.UserRepositoryInterface {
+	return &UserRepositoryDb{Db}
 }
 
 func (u *UserRepositoryDb) Create(input *model.User) error {

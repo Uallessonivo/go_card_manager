@@ -1,9 +1,11 @@
-package main
+package cmd
 
 import (
 	"log"
 
 	"github.com/Uallessonivo/go_card_manager/api/handler"
+	"github.com/Uallessonivo/go_card_manager/api/repository"
+	"github.com/Uallessonivo/go_card_manager/api/usecase"
 	"github.com/Uallessonivo/go_card_manager/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -16,12 +18,15 @@ func init() {
 	}
 }
 
-func main() {
+func Execute() {
 	database.ConnectDB()
 
 	app := fiber.New()
 
-	handler.UserRoutes(app)
+	uRepo := repository.NewUserRepository(database.DB.Db)
+	uCase := usecase.NewUserUseCase(uRepo)
+
+	handler.UserRoutes(app, uCase)
 
 	app.Listen(":9090")
 }

@@ -9,7 +9,13 @@ type UserUseCase struct {
 	UserRepository interfaces.UserRepositoryInterface
 }
 
-func (u *UserUseCase) Create(name string, email string, password string, finished bool) (*model.User, error) {
+func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCaseInterface {
+	return &UserUseCase{
+		UserRepository: u,
+	}
+}
+
+func (u *UserUseCase) Create(name string, email string, password string) (*model.User, error) {
 	newUser, err := model.NewUser(name, email, password)
 
 	if err != nil {
