@@ -3,8 +3,8 @@ package cmd
 import (
 	"log"
 
-	"github.com/Uallessonivo/go_card_manager/api/handler"
 	"github.com/Uallessonivo/go_card_manager/api/repository"
+	"github.com/Uallessonivo/go_card_manager/api/routes"
 	"github.com/Uallessonivo/go_card_manager/api/usecase"
 	"github.com/Uallessonivo/go_card_manager/database"
 	"github.com/gofiber/fiber/v2"
@@ -26,7 +26,7 @@ func Execute() {
 	uRepo := repository.NewUserRepository(database.DB.Db)
 	uCase := usecase.NewUserUseCase(uRepo)
 
-	handler.UserRoutes(app, uCase)
+	routes.UserRoutes(app, uCase)
 
 	app.Listen(":9090")
 }

@@ -23,3 +23,13 @@ func (u *UserRepositoryDb) Create(input *model.User) error {
 
 	return nil
 }
+
+func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
+	err := u.Db.First(&model.User{}, id).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, err
+}

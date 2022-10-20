@@ -15,7 +15,7 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 	}
 }
 
-func (u *UserUseCase) Create(name string, email string, password string) (*model.User, error) {
+func (u *UserUseCase) Create(name string, email string, password string) (*model.UserResponse, error) {
 	newUser, err := model.NewUser(name, email, password)
 
 	if err != nil {
@@ -28,5 +28,27 @@ func (u *UserUseCase) Create(name string, email string, password string) (*model
 		return nil, err
 	}
 
-	return newUser, nil
+	response := model.UserResponse{
+		ID:    newUser.ID,
+		Name:  newUser.Name,
+		Email: newUser.Email,
+	}
+
+	return &response, nil
+}
+
+func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
+	userFound, err := u.UserRepository.GetByID(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := model.UserResponse{
+		ID:    userFound.ID,
+		Name:  userFound.Name,
+		Email: userFound.Email,
+	}
+
+	return &response, nil
 }
