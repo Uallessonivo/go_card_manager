@@ -16,10 +16,16 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 }
 
 func (u *UserUseCase) Create(name string, email string, password string) (*model.UserResponse, error) {
-	newUser, err := model.NewUser(name, email, password)
+	newUser, err := model.MakeUser(name, email, password)
 
 	if err != nil {
 		return nil, err
+	}
+
+	userFound, foundErr := u.UserRepository.GetByID(newUser.ID)
+
+	if foundErr != nil || userFound.ID != "" || userFound.Email != "" {
+		return nil, foundErr
 	}
 
 	er := u.UserRepository.Create(newUser)
@@ -51,4 +57,42 @@ func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
 	}
 
 	return &response, nil
+}
+
+func (u *UserUseCase) Update(name string, email string, password string) (*model.UserResponse, error) {
+	updateUser, err := model.MakeUser(name, email, password)
+
+	if err != nil {
+		return nil, err
+	}
+
+	er := u.UserRepository.Update(updateUser)
+
+	if er != nil {
+		return nil, err
+	}
+
+	response := model.UserResponse{
+		ID:    updateUser.ID,
+		Name:  updateUser.Name,
+		Email: updateUser.Email,
+	}
+
+	return &response, nil
+}
+
+func (u *UserUseCase) Delete(id string) error {
+	userFound, err := u.UserRepository.GetByID(id)
+
+	if err != nil {
+		return err
+	}
+
+	er := u.UserRepository.Delete(userFound.ID)
+
+	if er != nil {
+		return er
+	}
+
+	return nil
 }

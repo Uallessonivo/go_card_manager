@@ -19,7 +19,7 @@ type UserResponse struct {
 	Email string `json:"email"`
 }
 
-func NewUser(name string, email string, password string) (*User, error) {
+func MakeUser(name string, email string, password string) (*User, error) {
 	newUser := User{
 		ID:       "sadasdasdasd",
 		Name:     name,

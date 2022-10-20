@@ -33,3 +33,25 @@ func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
 
 	return nil, err
 }
+
+func (u *UserRepositoryDb) Update(input *model.User) error {
+	err := u.Db.Save(&model.User{}).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (u *UserRepositoryDb) Delete(id string) error {
+	err := u.Db.Delete(&model.User{}, id).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
