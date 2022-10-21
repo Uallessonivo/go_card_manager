@@ -25,7 +25,17 @@ func (u *UserRepositoryDb) Create(input *model.User) error {
 }
 
 func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
-	err := u.Db.First(&model.User{}, id).Error
+	err := u.Db.First(&model.User{}, "id = ?", id).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, err
+}
+
+func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
+	err := u.Db.Find(&model.User{}, "email = ?", email).Error
 
 	if err != nil {
 		return nil, err
@@ -35,23 +45,21 @@ func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
 }
 
 func (u *UserRepositoryDb) Update(input *model.User) error {
-	err := u.Db.Save(&model.User{}).Error
+	err := u.Db.Save(&input).Error
 
 	if err != nil {
 		return err
 	}
 
 	return nil
-
 }
 
 func (u *UserRepositoryDb) Delete(id string) error {
-	err := u.Db.Delete(&model.User{}, id).Error
+	err := u.Db.Delete(&model.User{}, "id = ?", id).Error
 
 	if err != nil {
 		return err
 	}
 
 	return nil
-
 }

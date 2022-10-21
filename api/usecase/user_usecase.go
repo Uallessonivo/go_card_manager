@@ -22,12 +22,6 @@ func (u *UserUseCase) Create(name string, email string, password string) (*model
 		return nil, err
 	}
 
-	userFound, foundErr := u.UserRepository.GetByID(newUser.ID)
-
-	if foundErr != nil || userFound.ID != "" || userFound.Email != "" {
-		return nil, foundErr
-	}
-
 	er := u.UserRepository.Create(newUser)
 
 	if er != nil {
@@ -82,13 +76,7 @@ func (u *UserUseCase) Update(name string, email string, password string) (*model
 }
 
 func (u *UserUseCase) Delete(id string) error {
-	userFound, err := u.UserRepository.GetByID(id)
-
-	if err != nil {
-		return err
-	}
-
-	er := u.UserRepository.Delete(userFound.ID)
+	er := u.UserRepository.Delete(id)
 
 	if er != nil {
 		return er

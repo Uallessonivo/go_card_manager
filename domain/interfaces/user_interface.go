@@ -14,4 +14,5 @@ type UserRepositoryInterface interface {
 	GetByID(id string) (*model.User, error)
 	Update(input *model.User) error
 	Delete(id string) error
+	GetByEmail(email string) (*model.User, error)
 }
