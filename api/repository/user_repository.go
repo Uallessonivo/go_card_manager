@@ -25,23 +25,27 @@ func (u *UserRepositoryDb) Create(input *model.User) error {
 }
 
 func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
-	err := u.Db.First(&model.User{}, "id = ?", id).Error
+	var user model.User
+
+	err := u.Db.First(&user, "id = ?", id).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, err
+	return &user, nil
 }
 
 func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
-	err := u.Db.Find(&model.User{}, "email = ?", email).Error
+	var user model.User
+
+	err := u.Db.Find(&user, "email = ?", email).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, err
+	return &user, nil
 }
 
 func (u *UserRepositoryDb) Update(input *model.User) error {
