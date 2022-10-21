@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
@@ -22,6 +23,16 @@ func (u *UserUseCase) Create(name string, email string, password string) (*model
 		return nil, err
 	}
 
+	userExists, userExistsErr := u.UserRepository.GetByEmail(newUser.Email)
+
+	if userExistsErr != nil {
+		return nil, userExistsErr
+	}
+
+	if userExists.Email != "" {
+		return nil, domain.ErrUserExists
+	}
+
 	er := u.UserRepository.Create(newUser)
 
 	if er != nil {
@@ -41,7 +52,7 @@ func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByID(id)
 
 	if err != nil {
-		return nil, err
+		return nil, domain.ErrUserNotFound
 	}
 
 	response := model.UserResponse{
@@ -58,6 +69,16 @@ func (u *UserUseCase) Update(name string, email string, password string) (*model
 
 	if err != nil {
 		return nil, err
+	}
+
+	userExists, userExistsErr := u.UserRepository.GetByEmail(updateUser.Email)
+
+	if userExistsErr != nil {
+		return nil, userExistsErr
+	}
+
+	if userExists.Email == "" {
+		return nil, domain.ErrUserNotFound
 	}
 
 	er := u.UserRepository.Update(updateUser)
@@ -79,7 +100,7 @@ func (u *UserUseCase) Delete(id string) error {
 	er := u.UserRepository.Delete(id)
 
 	if er != nil {
-		return er
+		return domain.ErrUserNotFound
 	}
 
 	return nil

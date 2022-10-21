@@ -10,8 +10,8 @@ func UserRoutes(app *fiber.App, us interfaces.UserUseCaseInterface) {
 	httpHandler := &handler.UserHandler{
 		UseCase: us,
 	}
-	app.Post("/users/create", httpHandler.CreateUser)
+	app.Post("/user/create", httpHandler.CreateUser)
 	app.Get("/user/find/:id", httpHandler.GetUserByID)
 	app.Delete("/user/delete/:id", httpHandler.DeleteUser)
-	app.Put("/users/update", httpHandler.UpdateUser)
+	app.Put("/user/update", httpHandler.UpdateUser)
 }
