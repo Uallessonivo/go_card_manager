@@ -39,13 +39,14 @@ func (u UserHandler) GetUserByID(c *fiber.Ctx) error {
 }
 
 func (u UserHandler) UpdateUser(c *fiber.Ctx) error {
-	var user model.User
+	param := c.Params("id")
+	var user model.UserRequest
 
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.UseCase.Update(user.Name, user.Email, user.Password)
+	result, err := u.UseCase.Update(param, user.Name, user.Email, user.Password)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())

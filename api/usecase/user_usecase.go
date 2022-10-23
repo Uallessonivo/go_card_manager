@@ -17,24 +17,17 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 }
 
 func (u *UserUseCase) Create(name string, email string, password string) (*model.UserResponse, error) {
-	newUser, err := model.MakeUser(name, email, password)
-
+	newUser, err := model.MakeUser("", name, email, password)
 	if err != nil {
 		return nil, err
 	}
 
-	userExists, userExistsErr := u.UserRepository.GetByEmail(newUser.Email)
-
-	if userExistsErr != nil {
-		return nil, userExistsErr
-	}
-
-	if userExists.Email != "" {
+	userExists, _ := u.UserRepository.GetByEmail(newUser.Email)
+	if userExists != nil {
 		return nil, domain.ErrUserExists
 	}
 
 	er := u.UserRepository.Create(newUser)
-
 	if er != nil {
 		return nil, err
 	}
@@ -64,27 +57,20 @@ func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
 	return &response, nil
 }
 
-func (u *UserUseCase) Update(name string, email string, password string) (*model.UserResponse, error) {
-	updateUser, err := model.MakeUser(name, email, password)
-
-	if err != nil {
-		return nil, err
-	}
-
-	userExists, userExistsErr := u.UserRepository.GetByEmail(updateUser.Email)
-
-	if userExistsErr != nil {
-		return nil, userExistsErr
-	}
-
-	if userExists.Email == "" {
+func (u *UserUseCase) Update(id string, name string, email string, password string) (*model.UserResponse, error) {
+	_, errr := u.UserRepository.GetByID(id)
+	if errr != nil {
 		return nil, domain.ErrUserNotFound
 	}
 
-	er := u.UserRepository.Update(updateUser)
+	updateUser, updateUserErr := model.MakeUser(id, name, email, password)
+	if updateUserErr != nil {
+		return nil, updateUserErr
+	}
 
+	er := u.UserRepository.Update(updateUser)
 	if er != nil {
-		return nil, err
+		return nil, er
 	}
 
 	response := model.UserResponse{
@@ -97,10 +83,14 @@ func (u *UserUseCase) Update(name string, email string, password string) (*model
 }
 
 func (u *UserUseCase) Delete(id string) error {
-	er := u.UserRepository.Delete(id)
-
-	if er != nil {
+	_, err := u.UserRepository.GetByID(id)
+	if err != nil {
 		return domain.ErrUserNotFound
+	}
+
+	er := u.UserRepository.Delete(id)
+	if er != nil {
+		return er
 	}
 
 	return nil

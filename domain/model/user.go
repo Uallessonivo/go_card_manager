@@ -25,35 +25,33 @@ type UserResponse struct {
 	Email string `json:"email"`
 }
 
-func emailIsValid(email string) error {
-	_, err := regexp.MatchString(`^[\w-]+@([\w-]+\.)+[\w-]{2,4}$`, email)
-	if err != nil {
-		return err
-	}
-	return nil
+func emailIsValid(email string) bool {
+	matched, _ := regexp.MatchString(`^[\w-]+@([\w-]+\.)+[\w-]{2,4}$`, email)
+	return matched
 }
 
-func passwordIsValid(password string) error {
-	_, err := regexp.MatchString(`^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$`, password)
-	if err != nil {
-		return err
-	}
-	return nil
+func passwordIsValid(password string) bool {
+	matched, _ := regexp.MatchString(`^([a-zA-Z0-9@*#]{6,15})$`, password)
+	return matched
 }
 
-func MakeUser(name string, email string, password string) (*User, error) {
-	err := emailIsValid(email)
-	if err != nil {
+func MakeUser(id string, name string, email string, password string) (*User, error) {
+	emailIsValid := emailIsValid(email)
+	if emailIsValid == false {
 		return nil, domain.ErrInvalidEmail
 	}
 
-	errr := passwordIsValid(password)
-	if errr != nil {
+	passwordIsValid := passwordIsValid(password)
+	if passwordIsValid == false {
 		return nil, domain.ErrInvalidPassword
 	}
 
+	if id == "" {
+		id = uuid.NewV4().String()
+	}
+
 	newUser := User{
-		ID:       uuid.NewV4().String(),
+		ID:       id,
 		Name:     name,
 		Email:    email,
 		Password: password,

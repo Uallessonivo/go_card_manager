@@ -10,5 +10,5 @@ var (
 	ErrUserExists          = errors.New("this user already exists")
 	ErrBadParamInput       = errors.New("given param is not valid")
 	ErrInvalidEmail        = errors.New("email is invalid")
-	ErrInvalidPassword     = errors.New("passwords must contains at least 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number, can contain special characters")
+	ErrInvalidPassword     = errors.New("password must be alphanumeric and must consists of at least 6 characters and not more than 15 characters")
 )
