@@ -3,7 +3,10 @@ package model
 import (
 	"github.com/Uallessonivo/go_card_manager/domain"
 	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
+	"os"
 	"regexp"
+	"strconv"
 )
 
 type User struct {
@@ -14,9 +17,10 @@ type User struct {
 }
 
 type UserRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	SecretKey string `json:"secret_key"`
 }
 
 type UserResponse struct {
@@ -35,6 +39,12 @@ func passwordIsValid(password string) bool {
 	return matched
 }
 
+func hashPassword(password string) (string, error) {
+	cost, _ := strconv.Atoi(os.Getenv("BCRYPY_COST"))
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
+	return string(bytes), err
+}
+
 func MakeUser(id string, name string, email string, password string) (*User, error) {
 	emailIsValid := emailIsValid(email)
 	if emailIsValid == false {
@@ -46,6 +56,11 @@ func MakeUser(id string, name string, email string, password string) (*User, err
 		return nil, domain.ErrInvalidPassword
 	}
 
+	passwordHash, err := hashPassword(password)
+	if err != nil {
+		return nil, err
+	}
+
 	if id == "" {
 		id = uuid.NewV4().String()
 	}
@@ -54,7 +69,7 @@ func MakeUser(id string, name string, email string, password string) (*User, err
 		ID:       id,
 		Name:     name,
 		Email:    email,
-		Password: password,
+		Password: passwordHash,
 	}
 
 	return &newUser, nil

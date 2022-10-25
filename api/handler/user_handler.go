@@ -17,7 +17,7 @@ func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.UseCase.Create(user.Name, user.Email, user.Password)
+	result, err := u.UseCase.Create(user.Name, user.Email, user.Password, user.SecretKey)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())

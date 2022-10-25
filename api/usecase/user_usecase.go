@@ -4,6 +4,7 @@ import (
 	"github.com/Uallessonivo/go_card_manager/domain"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
+	"os"
 )
 
 type UserUseCase struct {
@@ -16,7 +17,7 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 	}
 }
 
-func (u *UserUseCase) Create(name string, email string, password string) (*model.UserResponse, error) {
+func (u *UserUseCase) Create(name string, email string, password string, secretKey string) (*model.UserResponse, error) {
 	newUser, err := model.MakeUser("", name, email, password)
 	if err != nil {
 		return nil, err
@@ -25,6 +26,10 @@ func (u *UserUseCase) Create(name string, email string, password string) (*model
 	userExists, _ := u.UserRepository.GetByEmail(newUser.Email)
 	if userExists != nil {
 		return nil, domain.ErrUserExists
+	}
+
+	if secretKey != os.Getenv("SECRET_KEY") {
+		return nil, domain.ErrInvalidParams
 	}
 
 	er := u.UserRepository.Create(newUser)
