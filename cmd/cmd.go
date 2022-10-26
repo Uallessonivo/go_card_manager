@@ -3,9 +3,9 @@ package cmd
 import (
 	"log"
 
-	"github.com/Uallessonivo/go_card_manager/api/repository"
-	"github.com/Uallessonivo/go_card_manager/api/routes"
-	"github.com/Uallessonivo/go_card_manager/api/usecase"
+	"github.com/Uallessonivo/go_card_manager/application/repository"
+	"github.com/Uallessonivo/go_card_manager/application/routes"
+	"github.com/Uallessonivo/go_card_manager/application/usecase"
 	"github.com/Uallessonivo/go_card_manager/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
