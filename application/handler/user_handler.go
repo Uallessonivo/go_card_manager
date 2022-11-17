@@ -38,6 +38,18 @@ func (u UserHandler) GetUserByID(c *fiber.Ctx) error {
 	return c.Status(200).JSON(result)
 }
 
+func (u UserHandler) GetUserByEmail(c *fiber.Ctx) error {
+	param := c.Params("email")
+
+	result, err := u.UseCase.GetByEmail(param)
+
+	if err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	return c.Status(200).JSON(result)
+}
+
 func (u UserHandler) UpdateUser(c *fiber.Ctx) error {
 	param := c.Params("id")
 	var user model.UserRequest
