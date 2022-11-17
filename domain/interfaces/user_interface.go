@@ -5,6 +5,7 @@ import "github.com/Uallessonivo/go_card_manager/domain/model"
 type UserUseCaseInterface interface {
 	Create(name string, email string, password string, secretKey string) (*model.UserResponse, error)
 	GetByID(id string) (*model.UserResponse, error)
+	GetByEmail(email string) (*model.UserResponse, error)
 	Update(id string, name string, email string, password string) (*model.UserResponse, error)
 	Delete(id string) error
 }

@@ -1,10 +1,11 @@
 package usecase
 
 import (
+	"os"
+
 	"github.com/Uallessonivo/go_card_manager/domain"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
-	"os"
 )
 
 type UserUseCase struct {
@@ -34,7 +35,7 @@ func (u *UserUseCase) Create(name string, email string, password string, secretK
 
 	er := u.UserRepository.Create(newUser)
 	if er != nil {
-		return nil, err
+		return nil, er
 	}
 
 	response := model.UserResponse{
@@ -48,6 +49,22 @@ func (u *UserUseCase) Create(name string, email string, password string, secretK
 
 func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByID(id)
+
+	if err != nil {
+		return nil, domain.ErrUserNotFound
+	}
+
+	response := model.UserResponse{
+		ID:    userFound.ID,
+		Name:  userFound.Name,
+		Email: userFound.Email,
+	}
+
+	return &response, nil
+}
+
+func (u *UserUseCase) GetByEmail(email string) (*model.UserResponse, error) {
+	userFound, err := u.UserRepository.GetByEmail(email)
 
 	if err != nil {
 		return nil, domain.ErrUserNotFound

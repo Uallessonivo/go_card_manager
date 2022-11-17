@@ -47,12 +47,12 @@ func hashPassword(password string) (string, error) {
 
 func MakeUser(id string, name string, email string, password string) (*User, error) {
 	emailIsValid := emailIsValid(email)
-	if emailIsValid == false {
+	if !emailIsValid {
 		return nil, domain.ErrInvalidEmail
 	}
 
 	passwordIsValid := passwordIsValid(password)
-	if passwordIsValid == false {
+	if !passwordIsValid {
 		return nil, domain.ErrInvalidPassword
 	}
 
