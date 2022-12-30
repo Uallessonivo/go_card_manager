@@ -30,7 +30,10 @@ func ConnectDB() {
 	log.Println("Connected to database")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
-	db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
+	dbErr := db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
+	if dbErr != nil {
+		return
+	}
 
 	DB = Dbinstance{
 		Db: db,

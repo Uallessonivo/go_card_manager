@@ -40,7 +40,7 @@ func passwordIsValid(password string) bool {
 }
 
 func hashPassword(password string) (string, error) {
-	cost, _ := strconv.Atoi(os.Getenv("BCRYPY_COST"))
+	cost, _ := strconv.Atoi(os.Getenv("BCRYPT_COST"))
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	return string(bytes), err
 }

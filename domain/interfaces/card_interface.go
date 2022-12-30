@@ -7,6 +7,13 @@ type CardRepositoryInterface interface {
 	ListByType(input string) ([]model.Card, error)
 	GetByCpf(input string) (*model.Card, error)
 	Create(input *model.Card) error
-	Update(input *model.Card) error
+	Delete(id string) error
+}
+
+type CardUseCaseInterface interface {
+	List() ([]model.CardResponse, error)
+	ListByType(input string) ([]model.CardResponse, error)
+	GetByCpf(input string) (*model.CardResponse, error)
+	Create(input *model.CardRequest) (*model.CardResponse, error)
 	Delete(id string) error
 }

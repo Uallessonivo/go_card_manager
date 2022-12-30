@@ -23,10 +23,18 @@ func Execute() {
 
 	app := fiber.New()
 
+	// USERS
 	uRepo := repository.NewUserRepository(database.DB.Db)
 	uCase := usecase.NewUserUseCase(uRepo)
+	// CARDS
+	cRepo := repository.NewCardRepository(database.DB.Db)
+	cCase := usecase.NewCardUseCase(cRepo)
 
 	routes.UserRoutes(app, uCase)
+	routes.CardRoutes(app, cCase)
 
-	app.Listen(":9090")
+	err := app.Listen(":9090")
+	if err != nil {
+		return
+	}
 }

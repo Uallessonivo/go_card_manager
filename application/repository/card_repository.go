@@ -60,16 +60,6 @@ func (c *CardRepository) ListByType(cardType string) ([]model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) Update(input *model.Card) error {
-	err := c.Db.Save(&input).Error
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (c *CardRepository) Delete(id string) error {
 	err := c.Db.Delete(&model.Card{}, "id = ?", id).Error
 
@@ -79,4 +69,3 @@ func (c *CardRepository) Delete(id string) error {
 
 	return nil
 }
-
