@@ -1,13 +1,16 @@
 package model
 
-import uuid "github.com/satori/go.uuid"
+import (
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
+	uuid "github.com/satori/go.uuid"
+)
 
 type Card struct {
-	ID     string `json:"id"`
-	Type   string `json:"type"`
-	Owner  string `json:"owner"`
-	Name   string `json:"name"`
-	Serial string `json:"serial"`
+	ID     string `gorm:"primary_key"`
+	Type   string
+	Owner  string
+	Name   string
+	Serial string
 }
 
 type CardRequest struct {
@@ -25,7 +28,10 @@ type CardResponse struct {
 }
 
 func MakeCard(card *CardRequest) (*Card, error) {
-	// TODO: validate fields
+	if len(card.Serial) != 15 || len(card.Owner) != 11 {
+		return nil, errors.InvalidFields
+	}
+
 	newCard := Card{
 		ID:     uuid.NewV4().String(),
 		Type:   card.Type,

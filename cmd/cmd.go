@@ -1,12 +1,12 @@
 package cmd
 
 import (
+	"github.com/Uallessonivo/go_card_manager/infra/database"
+	repository2 "github.com/Uallessonivo/go_card_manager/infra/repository"
 	"log"
 
-	"github.com/Uallessonivo/go_card_manager/application/repository"
 	"github.com/Uallessonivo/go_card_manager/application/routes"
 	"github.com/Uallessonivo/go_card_manager/application/usecase"
-	"github.com/Uallessonivo/go_card_manager/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -24,10 +24,10 @@ func Execute() {
 	app := fiber.New()
 
 	// USERS
-	uRepo := repository.NewUserRepository(database.DB.Db)
+	uRepo := repository2.NewUserRepository(database.DB.Db)
 	uCase := usecase.NewUserUseCase(uRepo)
 	// CARDS
-	cRepo := repository.NewCardRepository(database.DB.Db)
+	cRepo := repository2.NewCardRepository(database.DB.Db)
 	cCase := usecase.NewCardUseCase(cRepo)
 
 	routes.UserRoutes(app, uCase)

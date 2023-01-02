@@ -9,18 +9,12 @@ type CardUseCase struct {
 	CardRepository interfaces.CardRepositoryInterface
 }
 
-func NewCardUseCase(u interfaces.CardRepositoryInterface) interfaces.CardUseCaseInterface {
-	return &CardUseCase{
-		CardRepository: u,
-	}
-}
-
-func (c CardUseCase) List() ([]model.CardResponse, error) {
+func (c CardUseCase) List() ([]*model.CardResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CardUseCase) ListByType(input string) ([]model.CardResponse, error) {
+func (c CardUseCase) ListByType(input string) ([]*model.CardResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -54,4 +48,10 @@ func (c CardUseCase) Create(input *model.CardRequest) (*model.CardResponse, erro
 func (c CardUseCase) Delete(id string) error {
 	//TODO implement me
 	panic("implement me")
+}
+
+func NewCardUseCase(u interfaces.CardRepositoryInterface) interfaces.CardUseCaseInterface {
+	return &CardUseCase{
+		CardRepository: u,
+	}
 }

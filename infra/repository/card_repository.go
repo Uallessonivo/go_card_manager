@@ -24,8 +24,8 @@ func (c *CardRepository) Create(input *model.Card) error {
 	return nil
 }
 
-func (c *CardRepository) List() ([]model.Card, error) {
-	var cards []model.Card
+func (c *CardRepository) List() ([]*model.Card, error) {
+	var cards []*model.Card
 
 	err := c.Db.Find(&cards).Error
 
@@ -37,7 +37,7 @@ func (c *CardRepository) List() ([]model.Card, error) {
 }
 
 func (c *CardRepository) GetByCpf(cpf string) (*model.Card, error) {
-	var cards model.Card
+	var cards *model.Card
 
 	err := c.Db.First(&cards, "cpf = ?", cpf).Error
 
@@ -45,11 +45,11 @@ func (c *CardRepository) GetByCpf(cpf string) (*model.Card, error) {
 		return nil, err
 	}
 
-	return &cards, nil
+	return cards, nil
 }
 
-func (c *CardRepository) ListByType(cardType string) ([]model.Card, error) {
-	var cards []model.Card
+func (c *CardRepository) ListByType(cardType string) ([]*model.Card, error) {
+	var cards []*model.Card
 
 	err := c.Db.Find(&cards, "type = ?", cardType).Error
 

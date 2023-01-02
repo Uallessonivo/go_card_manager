@@ -1,10 +1,10 @@
 package model
 
 type Employee struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Cpf   string `json:"cpf"`
-	Cards []Card `gorm:"foreignKey:Owner;references:ID"`
+	ID    string `gorm:"primary_key"`
+	Name  string
+	Cpf   string
+	Cards []*Card `gorm:"foreignKey:Owner"`
 }
 
 type EmployeeRequest struct {

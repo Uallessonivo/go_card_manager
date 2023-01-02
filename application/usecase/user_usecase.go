@@ -1,11 +1,10 @@
 package usecase
 
 import (
-	"os"
-
-	"github.com/Uallessonivo/go_card_manager/domain"
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
+	"os"
 )
 
 type UserUseCase struct {
@@ -26,11 +25,11 @@ func (u *UserUseCase) Create(name string, email string, password string, secretK
 
 	userExists, _ := u.UserRepository.GetByEmail(newUser.Email)
 	if userExists != nil {
-		return nil, domain.ErrUserExists
+		return nil, errors.UserExists
 	}
 
 	if secretKey != os.Getenv("SECRET_KEY") {
-		return nil, domain.ErrInvalidParams
+		return nil, errors.InvalidParams
 	}
 
 	er := u.UserRepository.Create(newUser)
@@ -51,7 +50,7 @@ func (u *UserUseCase) GetByID(id string) (*model.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByID(id)
 
 	if err != nil {
-		return nil, domain.ErrUserNotFound
+		return nil, errors.UserNotFound
 	}
 
 	response := model.UserResponse{
@@ -67,7 +66,7 @@ func (u *UserUseCase) GetByEmail(email string) (*model.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByEmail(email)
 
 	if err != nil {
-		return nil, domain.ErrUserNotFound
+		return nil, errors.UserNotFound
 	}
 
 	response := model.UserResponse{
@@ -82,7 +81,7 @@ func (u *UserUseCase) GetByEmail(email string) (*model.UserResponse, error) {
 func (u *UserUseCase) Update(id string, name string, email string, password string) (*model.UserResponse, error) {
 	_, errr := u.UserRepository.GetByID(id)
 	if errr != nil {
-		return nil, domain.ErrUserNotFound
+		return nil, errors.UserNotFound
 	}
 
 	updateUser, updateUserErr := model.MakeUser(id, name, email, password)
@@ -107,7 +106,7 @@ func (u *UserUseCase) Update(id string, name string, email string, password stri
 func (u *UserUseCase) Delete(id string) error {
 	_, err := u.UserRepository.GetByID(id)
 	if err != nil {
-		return domain.ErrUserNotFound
+		return errors.UserNotFound
 	}
 
 	er := u.UserRepository.Delete(id)

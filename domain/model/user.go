@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain"
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 	"os"
@@ -10,10 +10,10 @@ import (
 )
 
 type User struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	ID       string `gorm:"primary_key"`
+	Name     string
+	Email    string
+	Password string
 }
 
 type UserRequest struct {
@@ -46,14 +46,12 @@ func hashPassword(password string) (string, error) {
 }
 
 func MakeUser(id string, name string, email string, password string) (*User, error) {
-	emailIsValid := emailIsValid(email)
-	if !emailIsValid {
-		return nil, domain.ErrInvalidEmail
+	if !emailIsValid(email) {
+		return nil, errors.InvalidEmail
 	}
 
-	passwordIsValid := passwordIsValid(password)
-	if !passwordIsValid {
-		return nil, domain.ErrInvalidPassword
+	if !passwordIsValid(password) {
+		return nil, errors.InvalidPassword
 	}
 
 	passwordHash, err := hashPassword(password)

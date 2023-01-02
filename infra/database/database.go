@@ -1,10 +1,10 @@
 package database
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"log"
 	"os"
 
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -30,9 +30,11 @@ func ConnectDB() {
 	log.Println("Connected to database")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
-	dbErr := db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
-	if dbErr != nil {
-		return
+	if os.Getenv("AUTO_MIGRATE") == "true" {
+		dbErr := db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
+		if dbErr != nil {
+			return
+		}
 	}
 
 	DB = Dbinstance{
