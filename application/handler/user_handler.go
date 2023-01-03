@@ -32,7 +32,7 @@ func (u UserHandler) GetUserByID(c *fiber.Ctx) error {
 	result, err := u.UseCase.GetByID(param)
 
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(404).JSON(err.Error())
 	}
 
 	return c.Status(200).JSON(result)
@@ -44,7 +44,7 @@ func (u UserHandler) GetUserByEmail(c *fiber.Ctx) error {
 	result, err := u.UseCase.GetByEmail(param)
 
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(404).JSON(err.Error())
 	}
 
 	return c.Status(200).JSON(result)

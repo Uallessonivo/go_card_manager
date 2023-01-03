@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	NotFound         = errors.New("record not found")
+	NoDataFound      = errors.New("we didn't find any record")
 	AlreadyExists    = errors.New("this record already exists")
 	InvalidEmail     = errors.New("email is invalid")
 	InvalidPassword  = errors.New("password must be alphanumeric and must consists of at least 6 characters and not more than 15 characters")

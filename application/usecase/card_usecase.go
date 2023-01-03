@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
@@ -17,63 +18,42 @@ func NewCardUseCase(u interfaces.CardRepositoryInterface) interfaces.CardUseCase
 }
 
 func (c CardUseCase) ListAllCards() ([]*model.CardResponse, error) {
-	var cards []*model.CardResponse
-
 	items, err := c.CardRepository.List()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, data := range items {
-		response := model.CardResponse{
-			ID:     data.ID,
-			Type:   data.Type,
-			Owner:  data.Owner,
-			Serial: data.Serial,
-		}
-		cards = append(cards, &response)
+	results, er := utils.CardsResponses(items)
+	if er != nil {
+		return nil, er
 	}
-	return cards, nil
+	return results, nil
 }
 
 func (c CardUseCase) ListAllCardsByType(input string) ([]*model.CardResponse, error) {
-	var cards []*model.CardResponse
-
 	items, err := c.CardRepository.ListByTYpe(input)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, data := range items {
-		response := model.CardResponse{
-			ID:     data.ID,
-			Type:   data.Type,
-			Owner:  data.Owner,
-			Serial: data.Serial,
-		}
-		cards = append(cards, &response)
+	results, er := utils.CardsResponses(items)
+	if er != nil {
+		return nil, er
 	}
-	return cards, nil
+	return results, nil
 }
 
 func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, error) {
-	var cards []*model.CardResponse
-
 	items, err := c.CardRepository.ListByOwner(input)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, data := range items {
-		response := model.CardResponse{
-			ID:     data.ID,
-			Type:   data.Type,
-			Owner:  data.Owner,
-			Serial: data.Serial,
-		}
-		cards = append(cards, &response)
+	results, er := utils.CardsResponses(items)
+	if er != nil {
+		return nil, er
 	}
-	return cards, nil
+	return results, nil
 }
 
 func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, error) {

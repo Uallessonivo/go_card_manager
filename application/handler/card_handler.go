@@ -28,7 +28,25 @@ func (cd CardHandler) CreateCard(c *fiber.Ctx) error {
 func (cd CardHandler) ListCards(c *fiber.Ctx) error {
 	results, err := cd.UseCase.ListAllCards()
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(404).JSON(err.Error())
+	}
+	return c.Status(200).JSON(&results)
+}
+
+func (cd CardHandler) ListCardsByType(c *fiber.Ctx) error {
+	param := c.Params("type")
+	results, err := cd.UseCase.ListAllCardsByType(param)
+	if err != nil {
+		return c.Status(404).JSON(err.Error())
+	}
+	return c.Status(200).JSON(&results)
+}
+
+func (cd CardHandler) ListCardsByOwner(c *fiber.Ctx) error {
+	param := c.Params("owner")
+	results, err := cd.UseCase.ListAllCardsByOwner(param)
+	if err != nil {
+		return c.Status(404).JSON(err.Error())
 	}
 	return c.Status(200).JSON(&results)
 }
@@ -38,26 +56,8 @@ func (cd CardHandler) DeleteCard(c *fiber.Ctx) error {
 	err := cd.UseCase.DeleteCard(param)
 
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(404).JSON(err.Error())
 	}
 
 	return c.Status(200).JSON("OK")
-}
-
-func (cd CardHandler) ListCardsByType(c *fiber.Ctx) error {
-	param := c.Params("type")
-	results, err := cd.UseCase.ListAllCardsByType(param)
-	if err != nil {
-		return c.Status(400).JSON(err.Error())
-	}
-	return c.Status(200).JSON(&results)
-}
-
-func (cd CardHandler) ListCardsByOwner(c *fiber.Ctx) error {
-	param := c.Params("owner")
-	results, err := cd.UseCase.ListAllCardsByOwner(param)
-	if err != nil {
-		return c.Status(400).JSON(err.Error())
-	}
-	return c.Status(200).JSON(&results)
 }
