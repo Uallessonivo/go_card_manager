@@ -13,5 +13,7 @@ func CardRoutes(app *fiber.App, us interfaces.CardUseCaseInterface) {
 
 	app.Post("/card/create", httpHandler.CreateCard)
 	app.Get("/cards", httpHandler.ListCards)
+	app.Get("/cards/filter-by-type/:type", httpHandler.ListCardsByType)
+	app.Get("/cards/filter-by-owner/:owner", httpHandler.ListCardsByOwner)
 	app.Delete("/card/:id", httpHandler.DeleteCard)
 }
