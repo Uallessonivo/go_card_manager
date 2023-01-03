@@ -36,10 +36,10 @@ func (c *CardRepository) List() ([]*model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) GetByCpf(cpf string) (*model.Card, error) {
-	var cards *model.Card
+func (c *CardRepository) ListByTYpe(input string) ([]*model.Card, error) {
+	var cards []*model.Card
 
-	err := c.Db.First(&cards, "cpf = ?", cpf).Error
+	err := c.Db.Find(&cards, "type = ?", input).Error
 
 	if err != nil {
 		return nil, err
@@ -48,16 +48,28 @@ func (c *CardRepository) GetByCpf(cpf string) (*model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) ListByType(cardType string) ([]*model.Card, error) {
+func (c *CardRepository) ListByOwner(input string) ([]*model.Card, error) {
 	var cards []*model.Card
 
-	err := c.Db.Find(&cards, "type = ?", cardType).Error
+	err := c.Db.Find(&cards, "owner = ?", input).Error
 
 	if err != nil {
 		return nil, err
 	}
 
 	return cards, nil
+}
+
+func (c *CardRepository) GetById(input string) (*model.Card, error) {
+	var card *model.Card
+
+	err := c.Db.First(&card, "id = ?", input).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return card, nil
 }
 
 func (c *CardRepository) Delete(id string) error {

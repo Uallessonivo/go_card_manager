@@ -39,7 +39,7 @@ func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
 func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
 	var user model.User
 
-	err := u.Db.Find(&user, "email = ?", email).Error
+	err := u.Db.First(&user, "email = ?", email).Error
 
 	if err != nil {
 		return nil, err

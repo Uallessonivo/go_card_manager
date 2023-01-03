@@ -12,4 +12,6 @@ func CardRoutes(app *fiber.App, us interfaces.CardUseCaseInterface) {
 	}
 
 	app.Post("/card/create", httpHandler.CreateCard)
+	app.Get("/cards", httpHandler.ListCards)
+	app.Delete("/card/:id", httpHandler.DeleteCard)
 }
