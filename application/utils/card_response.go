@@ -5,7 +5,7 @@ import (
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
-func CardsResponses(data []*model.Card) ([]*model.CardResponse, error) {
+func CardResponse(data []*model.Card) ([]*model.CardResponse, error) {
 	if len(data) == 0 {
 		return nil, errors.NoDataFound
 	}

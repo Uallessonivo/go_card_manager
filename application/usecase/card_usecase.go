@@ -23,7 +23,7 @@ func (c CardUseCase) ListAllCards() ([]*model.CardResponse, error) {
 		return nil, err
 	}
 
-	results, er := utils.CardsResponses(items)
+	results, er := utils.CardResponse(items)
 	if er != nil {
 		return nil, er
 	}
@@ -36,7 +36,7 @@ func (c CardUseCase) ListAllCardsByType(input string) ([]*model.CardResponse, er
 		return nil, err
 	}
 
-	results, er := utils.CardsResponses(items)
+	results, er := utils.CardResponse(items)
 	if er != nil {
 		return nil, er
 	}
@@ -49,7 +49,7 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 		return nil, err
 	}
 
-	results, er := utils.CardsResponses(items)
+	results, er := utils.CardResponse(items)
 	if er != nil {
 		return nil, er
 	}
@@ -63,7 +63,7 @@ func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, 
 	}
 
 	cardExists, _ := c.CardRepository.ListByOwner(newCard.Owner)
-	if len(cardExists) == 2 {
+	if len(cardExists) >= 2 {
 		return nil, errors.MaxNumberOfCards
 	}
 
