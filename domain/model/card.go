@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/enums"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	uuid "github.com/satori/go.uuid"
 )
@@ -14,27 +15,41 @@ type Card struct {
 }
 
 type CardRequest struct {
-	Type   string `json:"type"`
-	Owner  string `json:"owner"`
-	Name   string `json:"name"`
-	Serial string `json:"serial"`
+	Type   enums.CardType `json:"type"`
+	Owner  string         `json:"owner"`
+	Name   string         `json:"name"`
+	Serial string         `json:"serial"`
 }
 
 type CardResponse struct {
-	ID     string
+	ID     string `json:"id"`
 	Type   string `json:"type"`
 	Owner  string `json:"owner"`
 	Serial string `json:"serial"`
 }
 
 func MakeCard(card *CardRequest) (*Card, error) {
+	validTypes := map[enums.CardType]bool{
+		enums.DespesasMatriz: true,
+		enums.DespesasFilial: true,
+		enums.IncentivoCap1:  true,
+		enums.IncentivoCap2:  true,
+		enums.IncentivoInt1:  true,
+		enums.IncentivoInt2:  true,
+		enums.IncentivoSe:    true,
+	}
+
+	if !validTypes[card.Type] {
+		return nil, errors.InvalidFields
+	}
+
 	if len(card.Serial) != 15 || len(card.Owner) != 11 {
 		return nil, errors.InvalidFields
 	}
 
 	newCard := Card{
 		ID:     uuid.NewV4().String(),
-		Type:   card.Type,
+		Type:   string(card.Type),
 		Owner:  card.Owner,
 		Name:   card.Name,
 		Serial: card.Serial,
