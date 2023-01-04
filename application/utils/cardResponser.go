@@ -6,20 +6,18 @@ import (
 )
 
 func CardsResponses(data []*model.Card) ([]*model.CardResponse, error) {
-	var cards []*model.CardResponse
-
 	if len(data) == 0 {
 		return nil, errors.NoDataFound
 	}
 
+	var cards []*model.CardResponse
 	for _, data := range data {
-		response := model.CardResponse{
+		cards = append(cards, &model.CardResponse{
 			ID:     data.ID,
 			Type:   data.Type,
 			Owner:  data.Owner,
 			Serial: data.Serial,
-		}
-		cards = append(cards, &response)
+		})
 	}
 	return cards, nil
 }
