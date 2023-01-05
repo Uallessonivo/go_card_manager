@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/Uallessonivo/go_card_manager/infra/database"
-	repository2 "github.com/Uallessonivo/go_card_manager/infra/repository"
+	repository "github.com/Uallessonivo/go_card_manager/infra/repository"
 	"log"
 
 	"github.com/Uallessonivo/go_card_manager/application/routes"
@@ -24,14 +24,18 @@ func Execute() {
 	app := fiber.New()
 
 	// USERS
-	uRepo := repository2.NewUserRepository(database.DB.Db)
+	uRepo := repository.NewUserRepository(database.DB.Db)
 	uCase := usecase.NewUserUseCase(uRepo)
 	// CARDS
-	cRepo := repository2.NewCardRepository(database.DB.Db)
+	cRepo := repository.NewCardRepository(database.DB.Db)
 	cCase := usecase.NewCardUseCase(cRepo)
+	// EMPLOYEES
+	eRepo := repository.NewEmployeeRepository(database.DB.Db)
+	eCase := usecase.NewEmployeeUseCase(eRepo)
 
 	routes.UserRoutes(app, uCase)
 	routes.CardRoutes(app, cCase)
+	routes.EmployeeRoutes(app, eCase)
 
 	err := app.Listen(":9090")
 	if err != nil {

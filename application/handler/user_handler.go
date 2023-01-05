@@ -17,7 +17,7 @@ func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.UseCase.Create(&user)
+	result, err := u.UseCase.CreateUser(&user)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -29,7 +29,7 @@ func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 func (u UserHandler) GetUserByID(c *fiber.Ctx) error {
 	param := c.Params("id")
 
-	result, err := u.UseCase.GetByID(param)
+	result, err := u.UseCase.GetUserByID(param)
 
 	if err != nil {
 		return c.Status(404).JSON(err.Error())
@@ -41,7 +41,7 @@ func (u UserHandler) GetUserByID(c *fiber.Ctx) error {
 func (u UserHandler) GetUserByEmail(c *fiber.Ctx) error {
 	param := c.Params("email")
 
-	result, err := u.UseCase.GetByEmail(param)
+	result, err := u.UseCase.GetUserByEmail(param)
 
 	if err != nil {
 		return c.Status(404).JSON(err.Error())
@@ -58,7 +58,7 @@ func (u UserHandler) UpdateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	result, err := u.UseCase.Update(param, &user)
+	result, err := u.UseCase.UpdateUser(param, &user)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -70,7 +70,7 @@ func (u UserHandler) UpdateUser(c *fiber.Ctx) error {
 func (u UserHandler) DeleteUser(c *fiber.Ctx) error {
 	param := c.Params("id")
 
-	err := u.UseCase.Delete(param)
+	err := u.UseCase.DeleteUser(param)
 
 	if err != nil {
 		return c.Status(400).JSON(err.Error())

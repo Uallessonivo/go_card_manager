@@ -3,11 +3,11 @@ package interfaces
 import "github.com/Uallessonivo/go_card_manager/domain/model"
 
 type UserUseCaseInterface interface {
-	Create(input *model.UserRequest) (*model.UserResponse, error)
-	GetByID(id string) (*model.UserResponse, error)
-	GetByEmail(email string) (*model.UserResponse, error)
-	Update(id string, input *model.UserRequest) (*model.UserResponse, error)
-	Delete(id string) error
+	CreateUser(input *model.UserRequest) (*model.UserResponse, error)
+	GetUserByID(id string) (*model.UserResponse, error)
+	GetUserByEmail(email string) (*model.UserResponse, error)
+	UpdateUser(id string, input *model.UserRequest) (*model.UserResponse, error)
+	DeleteUser(id string) error
 }
 
 type UserRepositoryInterface interface {
