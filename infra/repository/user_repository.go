@@ -49,7 +49,7 @@ func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
 }
 
 func (u *UserRepositoryDb) Update(input *model.User) error {
-	err := u.Db.Save(&input).Error
+	err := u.Db.Model(model.User{}).Where("id = ?", input.ID).UpdateColumns(input).Error
 
 	if err != nil {
 		return err

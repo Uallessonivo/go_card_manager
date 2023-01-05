@@ -45,30 +45,40 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func MakeUser(id string, name string, email string, password string) (*User, error) {
-	if !emailIsValid(email) {
+func MakeUser(input *UserRequest) (*User, error) {
+	if input.SecretKey != os.Getenv("SECRET_KEY") {
+		return nil, errors.InvalidParams
+	}
+
+	if !emailIsValid(input.Email) {
 		return nil, errors.InvalidEmail
 	}
 
-	if !passwordIsValid(password) {
+	if !passwordIsValid(input.Password) {
 		return nil, errors.InvalidPassword
 	}
 
-	passwordHash, err := hashPassword(password)
+	passwordHash, err := hashPassword(input.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	if id == "" {
-		id = uuid.NewV4().String()
-	}
-
-	newUser := User{
-		ID:       id,
-		Name:     name,
-		Email:    email,
+	return &User{
+		ID:       uuid.NewV4().String(),
+		Name:     input.Name,
+		Email:    input.Email,
 		Password: passwordHash,
+	}, nil
+}
+
+func ValidateUser(input *UserRequest) error {
+	if !emailIsValid(input.Email) {
+		return errors.InvalidEmail
 	}
 
-	return &newUser, nil
+	if !passwordIsValid(input.Password) {
+		return errors.InvalidPassword
+	}
+
+	return nil
 }
