@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	uuid "github.com/satori/go.uuid"
 	"regexp"
 )
@@ -32,24 +31,14 @@ func validateName(name string) bool {
 }
 
 func MakeEmployee(employee *EmployeeRequest) (*Employee, error) {
-	if len(employee.Cpf) != 11 {
-		return nil, errors.InvalidFields
-	}
-
-	if !validateName(employee.Name) {
-		return nil, errors.InvalidFields
-	}
-
 	var cards []*Card
 	if employee.Cards != nil {
 		for _, data := range employee.Cards {
-			cards = append(cards, &Card{
-				ID:     uuid.NewV4().String(),
-				Type:   string(data.Type),
-				Owner:  data.Owner,
-				Name:   data.Name,
-				Serial: data.Serial,
-			})
+			card, err := MakeCard(data)
+			if err != nil {
+				return nil, err
+			}
+			cards = append(cards, card)
 		}
 	}
 
