@@ -47,13 +47,11 @@ func MakeCard(card *CardRequest) (*Card, error) {
 		return nil, errors.InvalidFields
 	}
 
-	newCard := Card{
+	return &Card{
 		ID:     uuid.NewV4().String(),
 		Type:   string(card.Type),
 		Owner:  card.Owner,
 		Name:   card.Name,
 		Serial: card.Serial,
-	}
-
-	return &newCard, nil
+	}, nil
 }
