@@ -24,3 +24,11 @@ func (h EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(result)
 }
+
+func (h EmployeeHandler) ListEmployees(c *fiber.Ctx) error {
+	results, err := h.UseCase.ListEmployees()
+	if err != nil {
+		return c.Status(404).JSON(err.Error())
+	}
+	return c.Status(200).JSON(&results)
+}

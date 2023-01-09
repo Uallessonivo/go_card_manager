@@ -40,8 +40,15 @@ func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.Em
 }
 
 func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	employees, err := e.EmployeeRepository.List()
+	if err != nil {
+		return nil, err
+	}
+	results, er := utils.EmployeeResponse(employees)
+	if er != nil {
+		return nil, er
+	}
+	return results, nil
 }
 
 func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, error) {

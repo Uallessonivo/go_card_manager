@@ -9,7 +9,7 @@ type Employee struct {
 	ID    string `gorm:"primary_key"`
 	Name  string
 	Cpf   string
-	Cards []*Card `gorm:"many2many:cards;"`
+	Cards []*Card `gorm:"many2many:cards"`
 }
 
 type EmployeeRequest struct {
