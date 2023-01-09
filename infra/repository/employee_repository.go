@@ -15,8 +15,11 @@ func NewEmployeeRepository(Db *gorm.DB) interfaces.EmployeeRepositoryInterface {
 }
 
 func (e EmployeeRepository) List() ([]*model.Employee, error) {
-	//TODO implement me
-	panic("implement me")
+	var employees []*model.Employee
+	if err := e.Db.Preload("Cards").Find(&employees).Error; err != nil {
+		return nil, err
+	}
+	return employees, nil
 }
 
 func (e EmployeeRepository) Get(input string) (*model.Employee, error) {
@@ -25,9 +28,13 @@ func (e EmployeeRepository) Get(input string) (*model.Employee, error) {
 }
 
 func (e EmployeeRepository) Create(input *model.Employee) error {
-	if err := e.Db.Create(&input).Error; err != nil {
+	var employee model.Employee
+
+	err := e.Db.Model(&employee).Association("Cards").Append(&input)
+	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
