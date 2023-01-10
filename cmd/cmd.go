@@ -31,7 +31,7 @@ func Execute() {
 	cCase := usecase.NewCardUseCase(cRepo)
 	// EMPLOYEES
 	eRepo := repository.NewEmployeeRepository(database.DB.Db)
-	eCase := usecase.NewEmployeeUseCase(eRepo)
+	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
 
 	routes.UserRoutes(app, uCase)
 	routes.CardRoutes(app, cCase)

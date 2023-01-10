@@ -1,21 +1,20 @@
 package model
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	uuid "github.com/satori/go.uuid"
 	"regexp"
 )
 
 type Employee struct {
-	ID    string `gorm:"primary_key"`
-	Name  string
-	Cpf   string
-	Cards []*Card `gorm:"many2many:cards"`
+	ID   string `gorm:"primary_key"`
+	Name string
+	Cpf  string
 }
 
 type EmployeeRequest struct {
-	Name  string         `json:"name"`
-	Cpf   string         `json:"cpf"`
-	Cards []*CardRequest `json:"cards"`
+	Name string `json:"name"`
+	Cpf  string `json:"cpf"`
 }
 
 type EmployeeResponse struct {
@@ -30,22 +29,24 @@ func validateName(name string) bool {
 	return matched
 }
 
+func validateCpf(cpf string) bool {
+	matched, _ := regexp.MatchString("", cpf)
+	return matched
+}
+
 func MakeEmployee(employee *EmployeeRequest) (*Employee, error) {
-	var cards []*Card
-	if employee.Cards != nil {
-		for _, data := range employee.Cards {
-			card, err := MakeCard(data)
-			if err != nil {
-				return nil, err
-			}
-			cards = append(cards, card)
-		}
+	if !validateName(employee.Name) {
+		return nil, errors.InvalidFields
 	}
 
+	// TODO
+	//if !validateCpf(employee.Cpf) {
+	//	return nil, errors.InvalidFields
+	//}
+
 	return &Employee{
-		ID:    uuid.NewV4().String(),
-		Name:  employee.Name,
-		Cpf:   employee.Cpf,
-		Cards: cards,
+		ID:   uuid.NewV4().String(),
+		Name: employee.Name,
+		Cpf:  employee.Cpf,
 	}, nil
 }

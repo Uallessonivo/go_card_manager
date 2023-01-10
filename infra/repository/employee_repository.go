@@ -16,34 +16,38 @@ func NewEmployeeRepository(Db *gorm.DB) interfaces.EmployeeRepositoryInterface {
 
 func (e EmployeeRepository) List() ([]*model.Employee, error) {
 	var employees []*model.Employee
-	if err := e.Db.Preload("Cards").Find(&employees).Error; err != nil {
+	if err := e.Db.Find(&employees).Error; err != nil {
 		return nil, err
 	}
 	return employees, nil
 }
 
 func (e EmployeeRepository) Get(input string) (*model.Employee, error) {
-	//TODO implement me
-	panic("implement me")
+	var employee *model.Employee
+	if err := e.Db.Where("name = ? OR cpf = ?", input, input).First(&employee).Error; err != nil {
+		return nil, err
+	}
+	return employee, nil
 }
 
 func (e EmployeeRepository) Create(input *model.Employee) error {
-	var employee model.Employee
-
-	err := e.Db.Model(&employee).Association("Cards").Append(&input)
-	if err != nil {
+	if err := e.Db.Create(&input).Error; err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func (e EmployeeRepository) Update(input *model.Employee) error {
-	//TODO implement me
-	panic("implement me")
+	err := e.Db.Model(model.Employee{}).Where("id = ?", input.ID).UpdateColumns(input).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (e EmployeeRepository) Delete(id string) error {
-	//TODO implement me
-	panic("implement me")
+	if err := e.Db.Delete(&model.Employee{}, "id = ?", id).Error; err != nil {
+		return err
+	}
+	return nil
 }

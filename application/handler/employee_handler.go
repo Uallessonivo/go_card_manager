@@ -32,3 +32,14 @@ func (h EmployeeHandler) ListEmployees(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(&results)
 }
+
+func (h EmployeeHandler) DeleteEmployee(c *fiber.Ctx) error {
+	param := c.Params("id")
+	err := h.UseCase.DeleteEmployee(param)
+
+	if err != nil {
+		return c.Status(404).JSON(err.Error())
+	}
+
+	return c.Status(200).JSON("OK")
+}

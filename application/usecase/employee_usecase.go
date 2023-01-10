@@ -2,17 +2,20 @@ package usecase
 
 import (
 	"github.com/Uallessonivo/go_card_manager/application/utils"
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
 type EmployeeUseCase struct {
 	EmployeeRepository interfaces.EmployeeRepositoryInterface
+	CardRepository     interfaces.CardRepositoryInterface
 }
 
-func NewEmployeeUseCase(u interfaces.EmployeeRepositoryInterface) interfaces.EmployeeUseCaseInterface {
+func NewEmployeeUseCase(u interfaces.EmployeeRepositoryInterface, c interfaces.CardRepositoryInterface) interfaces.EmployeeUseCaseInterface {
 	return &EmployeeUseCase{
 		EmployeeRepository: u,
+		CardRepository:     c,
 	}
 }
 
@@ -22,14 +25,17 @@ func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.Em
 		return nil, err
 	}
 
+	employeeExists, _ := e.EmployeeRepository.Get(newEmployee.Cpf)
+	if employeeExists != nil {
+		return nil, errors.AlreadyExists
+	}
+
 	if er := e.EmployeeRepository.Create(newEmployee); er != nil {
 		return nil, er
 	}
 
-	cards, errr := utils.CardResponse(newEmployee.Cards)
-	if errr != nil {
-		return nil, errr
-	}
+	cardsFound, _ := e.CardRepository.ListByOwner(newEmployee.Cpf)
+	cards, _ := utils.CardResponse(cardsFound)
 
 	return &model.EmployeeResponse{
 		ID:    newEmployee.ID,
@@ -44,10 +50,21 @@ func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	results, er := utils.EmployeeResponse(employees)
+
+	var cards []*model.Card
+	for _, employee := range employees {
+		card, cardsErr := e.CardRepository.ListByOwner(employee.Cpf)
+		if cardsErr != nil {
+			return nil, cardsErr
+		}
+		cards = append(cards, card...)
+	}
+
+	results, er := utils.EmployeeResponse(employees, cards)
 	if er != nil {
 		return nil, er
 	}
+
 	return results, nil
 }
 
@@ -62,6 +79,8 @@ func (e EmployeeUseCase) UpdateEmployee(input *model.EmployeeRequest) (*model.Em
 }
 
 func (e EmployeeUseCase) DeleteEmployee(input string) error {
-	//TODO implement me
-	panic("implement me")
+	if er := e.EmployeeRepository.Delete(input); er != nil {
+		return er
+	}
+	return nil
 }

@@ -13,4 +13,5 @@ func EmployeeRoutes(app *fiber.App, us interfaces.EmployeeUseCaseInterface) {
 
 	app.Post("/employee/create", httpHandler.CreateEmployee)
 	app.Get("/employees/list", httpHandler.ListEmployees)
+	app.Delete("/employee/delete/:id", httpHandler.DeleteEmployee)
 }
