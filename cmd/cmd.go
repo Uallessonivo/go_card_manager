@@ -23,14 +23,18 @@ func Execute() {
 
 	app := fiber.New()
 
-	// USERS
+	// USERS REPO
 	uRepo := repository.NewUserRepository(database.DB.Db)
-	uCase := usecase.NewUserUseCase(uRepo)
-	// CARDS
+	// CARDS REPO
 	cRepo := repository.NewCardRepository(database.DB.Db)
-	cCase := usecase.NewCardUseCase(cRepo)
-	// EMPLOYEES
+	// EMPLOYEE REPO
 	eRepo := repository.NewEmployeeRepository(database.DB.Db)
+
+	// USERS USE CASE
+	uCase := usecase.NewUserUseCase(uRepo)
+	// CARDS USE CASE
+	cCase := usecase.NewCardUseCase(cRepo, eRepo)
+	// EMPLOYEES USE CASE
 	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
 
 	routes.UserRoutes(app, uCase)

@@ -60,6 +60,18 @@ func (c *CardRepository) ListByOwner(input string) ([]*model.Card, error) {
 	return cards, nil
 }
 
+func (c *CardRepository) GetByOwner(input string) (*model.Card, error) {
+	var card *model.Card
+
+	err := c.Db.First(&card, "owner = ?", input).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return card, nil
+}
+
 func (c *CardRepository) GetById(input string) (*model.Card, error) {
 	var card *model.Card
 

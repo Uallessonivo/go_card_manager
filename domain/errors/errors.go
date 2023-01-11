@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	NotFound         = errors.New("record not found")
+	OwnerNotFound    = errors.New("to create a new card the owner has to be registered")
 	NoDataFound      = errors.New("we didn't find any record")
 	AlreadyExists    = errors.New("this record already exists")
 	InvalidEmail     = errors.New("email is invalid")

@@ -17,7 +17,6 @@ type Card struct {
 type CardRequest struct {
 	Type   enums.CardType `json:"type"`
 	Owner  string         `json:"owner"`
-	Name   string         `json:"name"`
 	Serial string         `json:"serial"`
 }
 
@@ -28,7 +27,7 @@ type CardResponse struct {
 	Serial string `json:"serial"`
 }
 
-func MakeCard(card *CardRequest) (*Card, error) {
+func MakeCard(card *CardRequest, ownerName string) (*Card, error) {
 	validTypes := map[enums.CardType]bool{
 		enums.DespesasMatriz: true,
 		enums.DespesasFilial: true,
@@ -51,7 +50,7 @@ func MakeCard(card *CardRequest) (*Card, error) {
 		ID:     uuid.NewV4().String(),
 		Type:   string(card.Type),
 		Owner:  card.Owner,
-		Name:   card.Name,
+		Name:   ownerName,
 		Serial: card.Serial,
 	}, nil
 }

@@ -8,12 +8,14 @@ import (
 )
 
 type CardUseCase struct {
-	CardRepository interfaces.CardRepositoryInterface
+	CardRepository     interfaces.CardRepositoryInterface
+	EmployeeRepository interfaces.EmployeeRepositoryInterface
 }
 
-func NewCardUseCase(u interfaces.CardRepositoryInterface) interfaces.CardUseCaseInterface {
+func NewCardUseCase(u interfaces.CardRepositoryInterface, c interfaces.EmployeeRepositoryInterface) interfaces.CardUseCaseInterface {
 	return &CardUseCase{
-		CardRepository: u,
+		CardRepository:     u,
+		EmployeeRepository: c,
 	}
 }
 
@@ -57,7 +59,12 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 }
 
 func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, error) {
-	newCard, err := model.MakeCard(input)
+	cardOwner, ownerNotFound := c.EmployeeRepository.Get(input.Owner)
+	if ownerNotFound != nil {
+		return nil, errors.OwnerNotFound
+	}
+
+	newCard, err := model.MakeCard(input, cardOwner.Name)
 	if err != nil {
 		return nil, err
 	}
