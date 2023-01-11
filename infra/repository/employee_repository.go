@@ -24,7 +24,7 @@ func (e EmployeeRepository) List() ([]*model.Employee, error) {
 
 func (e EmployeeRepository) Get(input string) (*model.Employee, error) {
 	var employee *model.Employee
-	if err := e.Db.Where("name = ? OR cpf = ?", input, input).First(&employee).Error; err != nil {
+	if err := e.Db.Where("id = ? OR cpf = ?", input, input).First(&employee).Error; err != nil {
 		return nil, err
 	}
 	return employee, nil

@@ -33,6 +33,18 @@ func (h EmployeeHandler) ListEmployees(c *fiber.Ctx) error {
 	return c.Status(200).JSON(&results)
 }
 
+func (h EmployeeHandler) GetEmployee(c *fiber.Ctx) error {
+	param := c.Query("query")
+
+	result, err := h.UseCase.GetFiltered(param)
+
+	if err != nil {
+		return c.Status(404).JSON(err.Error())
+	}
+
+	return c.Status(200).JSON(&result)
+}
+
 func (h EmployeeHandler) DeleteEmployee(c *fiber.Ctx) error {
 	param := c.Params("id")
 	err := h.UseCase.DeleteEmployee(param)

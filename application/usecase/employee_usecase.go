@@ -69,8 +69,21 @@ func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
 }
 
 func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	employeeFound, err := e.EmployeeRepository.Get(input)
+
+	if err != nil {
+		return nil, errors.NotFound
+	}
+
+	cardsFound, _ := e.CardRepository.ListByOwner(employeeFound.Cpf)
+	cards, _ := utils.CardResponse(cardsFound)
+
+	return &model.EmployeeResponse{
+		ID:    employeeFound.ID,
+		Name:  employeeFound.Name,
+		Cpf:   employeeFound.Cpf,
+		Cards: cards,
+	}, nil
 }
 
 func (e EmployeeUseCase) UpdateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error) {
