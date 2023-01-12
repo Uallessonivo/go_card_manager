@@ -35,7 +35,7 @@ func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.Em
 	}
 
 	cardsFound, _ := e.CardRepository.ListByOwner(newEmployee.Cpf)
-	cards, _ := utils.CardResponse(cardsFound)
+	cards := utils.CardResponse(cardsFound)
 
 	return &model.EmployeeResponse{
 		ID:    newEmployee.ID,
@@ -51,21 +51,11 @@ func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
 		return nil, err
 	}
 
-	var cards []*model.Card
-	for _, employee := range employees {
-		card, cardsErr := e.CardRepository.ListByOwner(employee.Cpf)
-		if cardsErr != nil {
-			return nil, cardsErr
-		}
-		cards = append(cards, card...)
-	}
+	cards, _ := e.CardRepository.List()
 
-	results, er := utils.EmployeeResponse(employees, cards)
-	if er != nil {
-		return nil, er
-	}
+	employeeResponses, _ := utils.EmployeeResponse(employees, cards)
 
-	return results, nil
+	return employeeResponses, nil
 }
 
 func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, error) {
@@ -76,7 +66,7 @@ func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, err
 	}
 
 	cardsFound, _ := e.CardRepository.ListByOwner(employeeFound.Cpf)
-	cards, _ := utils.CardResponse(cardsFound)
+	cards := utils.CardResponse(cardsFound)
 
 	return &model.EmployeeResponse{
 		ID:    employeeFound.ID,

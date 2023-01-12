@@ -5,28 +5,27 @@ import (
 )
 
 func EmployeeResponse(dataEmployees []*model.Employee, dataCards []*model.Card) ([]*model.EmployeeResponse, error) {
-	var cards []*model.CardResponse
-	if dataCards != nil {
-		for _, data := range dataCards {
-			card := &model.CardResponse{
-				ID:     data.ID,
-				Type:   data.Type,
-				Owner:  data.Owner,
-				Serial: data.Serial,
-			}
-			cards = append(cards, card)
+	employeeCards := make(map[string][]*model.Card)
+
+	for _, card := range dataCards {
+		employeeCards[card.Owner] = append(employeeCards[card.Owner], card)
+	}
+
+	var employeeResponses []*model.EmployeeResponse
+
+	for _, employee := range dataEmployees {
+		employeeResponse := &model.EmployeeResponse{
+			ID:   employee.ID,
+			Name: employee.Name,
+			Cpf:  employee.Cpf,
 		}
+
+		if dataCards, ok := employeeCards[employee.Cpf]; ok {
+			employeeResponse.Cards = CardResponse(dataCards)
+		}
+
+		employeeResponses = append(employeeResponses, employeeResponse)
 	}
 
-	var employees []*model.EmployeeResponse
-	for _, data := range dataEmployees {
-		employees = append(employees, &model.EmployeeResponse{
-			ID:    data.ID,
-			Name:  data.Name,
-			Cpf:   data.Cpf,
-			Cards: cards,
-		})
-	}
-
-	return employees, nil
+	return employeeResponses, nil
 }
