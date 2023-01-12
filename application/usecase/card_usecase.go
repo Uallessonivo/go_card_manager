@@ -25,10 +25,7 @@ func (c CardUseCase) ListAllCards() ([]*model.CardResponse, error) {
 		return nil, err
 	}
 
-	results, er := utils.CardResponse(items)
-	if er != nil {
-		return nil, er
-	}
+	results := utils.CardResponse(items)
 	return results, nil
 }
 
@@ -38,10 +35,7 @@ func (c CardUseCase) ListAllCardsByType(input string) ([]*model.CardResponse, er
 		return nil, err
 	}
 
-	results, er := utils.CardResponse(items)
-	if er != nil {
-		return nil, er
-	}
+	results := utils.CardResponse(items)
 	return results, nil
 }
 
@@ -51,10 +45,7 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 		return nil, err
 	}
 
-	results, er := utils.CardResponse(items)
-	if er != nil {
-		return nil, er
-	}
+	results := utils.CardResponse(items)
 	return results, nil
 }
 

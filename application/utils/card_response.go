@@ -1,15 +1,10 @@
 package utils
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
-func CardResponse(data []*model.Card) ([]*model.CardResponse, error) {
-	if len(data) == 0 {
-		return nil, errors.NoDataFound
-	}
-
+func CardResponse(data []*model.Card) []*model.CardResponse {
 	var cards []*model.CardResponse
 	for _, data := range data {
 		cards = append(cards, &model.CardResponse{
@@ -19,5 +14,5 @@ func CardResponse(data []*model.Card) ([]*model.CardResponse, error) {
 			Serial: data.Serial,
 		})
 	}
-	return cards, nil
+	return cards
 }
