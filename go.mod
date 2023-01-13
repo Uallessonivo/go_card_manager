@@ -9,6 +9,8 @@ require (
 	gorm.io/gorm v1.24.0
 )
 
+require github.com/paemuri/brdoc v1.1.2 // indirect
+
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect

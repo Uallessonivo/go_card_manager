@@ -6,7 +6,7 @@ type EmployeeUseCaseInterface interface {
 	CreateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error)
 	ListEmployees() ([]*model.EmployeeResponse, error)
 	GetFiltered(input string) (*model.EmployeeResponse, error)
-	UpdateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error)
+	UpdateEmployee(id string, input *model.EmployeeRequest) (*model.EmployeeResponse, error)
 	DeleteEmployee(input string) error
 }
 

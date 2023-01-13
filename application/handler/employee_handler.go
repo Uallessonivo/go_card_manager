@@ -55,3 +55,20 @@ func (h EmployeeHandler) DeleteEmployee(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON("OK")
 }
+
+func (h EmployeeHandler) UpdateEmployee(c *fiber.Ctx) error {
+	param := c.Params("id")
+	var employee model.EmployeeRequest
+
+	if err := c.BodyParser(&employee); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	result, err := h.UseCase.UpdateEmployee(param, &employee)
+
+	if err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	return c.Status(200).JSON(result)
+}

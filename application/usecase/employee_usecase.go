@@ -53,7 +53,7 @@ func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
 
 	cards, _ := e.CardRepository.List()
 
-	employeeResponses, _ := utils.EmployeeResponse(employees, cards)
+	employeeResponses := utils.EmployeeResponse(employees, cards)
 
 	return employeeResponses, nil
 }
@@ -76,9 +76,29 @@ func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, err
 	}, nil
 }
 
-func (e EmployeeUseCase) UpdateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (e EmployeeUseCase) UpdateEmployee(id string, input *model.EmployeeRequest) (*model.EmployeeResponse, error) {
+	_, err := e.EmployeeRepository.Get(id)
+	if err != nil {
+		return nil, errors.NotFound
+	}
+
+	if validateErr := model.ValidateEmployee(input); validateErr != nil {
+		return nil, errors.InvalidFields
+	}
+
+	if updateErr := e.EmployeeRepository.Update(&model.Employee{
+		ID:   id,
+		Name: input.Name,
+		Cpf:  input.Cpf,
+	}); updateErr != nil {
+		return nil, updateErr
+	}
+
+	return &model.EmployeeResponse{
+		ID:   id,
+		Name: input.Name,
+		Cpf:  input.Cpf,
+	}, nil
 }
 
 func (e EmployeeUseCase) DeleteEmployee(input string) error {

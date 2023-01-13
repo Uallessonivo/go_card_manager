@@ -4,7 +4,7 @@ import (
 	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
-func EmployeeResponse(dataEmployees []*model.Employee, dataCards []*model.Card) ([]*model.EmployeeResponse, error) {
+func EmployeeResponse(dataEmployees []*model.Employee, dataCards []*model.Card) []*model.EmployeeResponse {
 	employeeCards := make(map[string][]*model.Card)
 
 	for _, card := range dataCards {
@@ -27,5 +27,5 @@ func EmployeeResponse(dataEmployees []*model.Employee, dataCards []*model.Card) 
 		employeeResponses = append(employeeResponses, employeeResponse)
 	}
 
-	return employeeResponses, nil
+	return employeeResponses
 }

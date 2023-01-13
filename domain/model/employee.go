@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
+	"github.com/paemuri/brdoc"
 	uuid "github.com/satori/go.uuid"
 	"regexp"
 )
@@ -30,7 +31,7 @@ func validateName(name string) bool {
 }
 
 func validateCpf(cpf string) bool {
-	matched, _ := regexp.MatchString("", cpf)
+	matched := brdoc.IsCPF(cpf)
 	return matched
 }
 
@@ -39,14 +40,25 @@ func MakeEmployee(employee *EmployeeRequest) (*Employee, error) {
 		return nil, errors.InvalidFields
 	}
 
-	// TODO
-	//if !validateCpf(employee.Cpf) {
-	//	return nil, errors.InvalidFields
-	//}
+	if !validateCpf(employee.Cpf) {
+		return nil, errors.InvalidFields
+	}
 
 	return &Employee{
 		ID:   uuid.NewV4().String(),
 		Name: employee.Name,
 		Cpf:  employee.Cpf,
 	}, nil
+}
+
+func ValidateEmployee(employee *EmployeeRequest) error {
+	if !validateName(employee.Name) {
+		return errors.InvalidFields
+	}
+
+	if !validateCpf(employee.Cpf) {
+		return errors.InvalidFields
+	}
+
+	return nil
 }
