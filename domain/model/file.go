@@ -4,6 +4,10 @@ type UploadFile struct {
 	// TODO
 }
 
-type DownloadFile struct {
+type GenerateEmployeesReport struct {
+	// TODO
+}
+
+type GenerateCardsReport struct {
 	// TODO
 }

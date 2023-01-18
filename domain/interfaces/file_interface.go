@@ -1,5 +1,9 @@
 package interfaces
 
+// TODO
+
 type FileUseCaseInterface interface {
-	// TODO
+	SaveData() error
+	GenerateCardsReport() error
+	GenerateEmployeesReport() error
 }
