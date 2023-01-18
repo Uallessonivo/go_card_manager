@@ -36,10 +36,14 @@ func Execute() {
 	cCase := usecase.NewCardUseCase(cRepo, eRepo)
 	// EMPLOYEES USE CASE
 	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
+	// FILE USE CASE
+	fCase := usecase.NewFileUseCase(eRepo, cRepo)
 
+	// ROUTES
 	routes.UserRoutes(app, uCase)
 	routes.CardRoutes(app, cCase)
 	routes.EmployeeRoutes(app, eCase)
+	routes.FileRoutes(app, fCase)
 
 	err := app.Listen(":9090")
 	if err != nil {
