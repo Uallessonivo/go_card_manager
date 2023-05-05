@@ -1,9 +1,10 @@
 package database
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"log"
 	"os"
+
+	"github.com/Uallessonivo/go_card_manager/domain/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

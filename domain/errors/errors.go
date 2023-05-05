@@ -12,4 +12,5 @@ var (
 	InvalidParams    = errors.New("please make sure all required fields are filled out and try again")
 	InvalidFields    = errors.New("one or more fields in the data you sent are invalids")
 	MaxNumberOfCards = errors.New("each employee must have a maximum of 2 cards")
+	FileExtension    = errors.New("We only support '.xlsx' files")
 )
