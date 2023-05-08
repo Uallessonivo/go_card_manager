@@ -4,13 +4,16 @@ import (
 	"mime/multipart"
 	"path/filepath"
 
+	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
+	"github.com/xuri/excelize/v2"
 )
 
 type FileUseCase struct {
 	EmployeeRepository interfaces.EmployeeRepositoryInterface
 	CardRepository     interfaces.CardRepositoryInterface
+	CardeUseCase       interfaces.CardUseCaseInterface
 }
 
 func NewFileUseCase(e interfaces.EmployeeRepositoryInterface, c interfaces.CardRepositoryInterface) interfaces.FileUseCaseInterface {
@@ -29,8 +32,27 @@ func (f FileUseCase) ValidateFile(file *multipart.FileHeader) error {
 	return nil
 }
 
-func (f FileUseCase) SaveData(filePath *multipart.FileHeader) error {
-	panic("implement me")
+func (f FileUseCase) SaveData(file *multipart.FileHeader) error {
+	fl, err := excelize.OpenFile(file.Filename)
+	if err != nil {
+		return err
+	}
+	defer fl.Close()
+
+	// TODO
+	cards, err := utils.ExtractDataFromExcelFile(fl)
+	if err != nil {
+		return err
+	}
+
+	// TOOD: save data in database
+	for _, card := range cards {
+		if _, err := f.CardeUseCase.CreateCard(card); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (f FileUseCase) GenerateCardsReport() error {
