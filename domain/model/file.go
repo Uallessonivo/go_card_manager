@@ -1,5 +1,10 @@
 package model
 
+type UploadResponse struct {
+	Message     string
+	FailedCards []*CardRequest
+}
+
 type GenerateEmployeesReport struct {
 	// TODO
 }

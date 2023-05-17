@@ -16,14 +16,19 @@ func (h FileHandler) UploadFile(c *fiber.Ctx) error {
 	}
 
 	if err := h.UseCase.ValidateFile(file); err != nil {
-		return c.Status(400).JSON(err)
+		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := h.UseCase.SaveData(file); err != nil {
-		return err
+	response, err := h.UseCase.SaveData(file)
+	if err != nil {
+		return c.Status(500).JSON(err.Error())
 	}
 
-	return c.Status(200).JSON("OK")
+	if response.FailedCards != nil {
+		return c.Status(400).JSON(response)
+	}
+
+	return c.Status(200).JSON(fiber.Map{"Message": response.Message})
 }
 
 // TOOD
