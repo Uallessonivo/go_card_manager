@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,11 +16,13 @@ func (h FileHandler) UploadFile(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := h.UseCase.ValidateFile(file); err != nil {
+	cards, err := utils.ExtractDataFromExcelFile(file)
+	if err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	response, err := h.UseCase.SaveData(file)
+	response, err := h.UseCase.SaveData(cards)
+
 	if err != nil {
 		return c.Status(500).JSON(err.Error())
 	}
@@ -28,7 +31,7 @@ func (h FileHandler) UploadFile(c *fiber.Ctx) error {
 		return c.Status(400).JSON(response)
 	}
 
-	return c.Status(200).JSON(fiber.Map{"Message": response.Message})
+	return c.Status(200).JSON(fiber.Map{"Result": response.Message})
 }
 
 // TOOD
