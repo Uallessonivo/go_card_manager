@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/Uallessonivo/go_card_manager/infra/database"
 	repository "github.com/Uallessonivo/go_card_manager/infra/repository"
-	"log"
 
 	"github.com/Uallessonivo/go_card_manager/application/routes"
 	"github.com/Uallessonivo/go_card_manager/application/usecase"
@@ -32,12 +33,14 @@ func Execute() {
 
 	// USERS USE CASE
 	uCase := usecase.NewUserUseCase(uRepo)
+	// VALIDATE CARDS USE CASE
+	vCase := usecase.NewValidateCardUseCase(cRepo, eRepo)
 	// CARDS USE CASE
-	cCase := usecase.NewCardUseCase(cRepo, eRepo)
+	cCase := usecase.NewCardUseCase(cRepo, eRepo, vCase)
 	// EMPLOYEES USE CASE
 	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
 	// FILE USE CASE
-	fCase := usecase.NewFileUseCase(eRepo, cRepo)
+	fCase := usecase.NewFileUseCase(eRepo, cRepo, cCase)
 
 	// ROUTES
 	routes.UserRoutes(app, uCase)
