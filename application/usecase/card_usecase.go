@@ -55,17 +55,13 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 }
 
 func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, error) {
-	cardOwner, err := c.CardValidator.ValidateOwnerExists(input.Owner)
+	cardOwner, err := c.CardValidator.ValidateCard(input.Owner)
 	if err != nil {
 		return nil, err
 	}
 
 	newCard, err := model.MakeCard(input, cardOwner.Name)
 	if err != nil {
-		return nil, err
-	}
-
-	if err := c.CardValidator.ValidateMaxCards(newCard.Owner); err != nil {
 		return nil, err
 	}
 

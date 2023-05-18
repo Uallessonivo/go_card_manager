@@ -21,6 +21,5 @@ type CardRepositoryInterface interface {
 }
 
 type CardValidatorInterface interface {
-	ValidateMaxCards(input string) error
-	ValidateOwnerExists(input string) (*model.Employee, error)
+	ValidateCard(input string) (*model.Employee, error)
 }

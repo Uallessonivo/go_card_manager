@@ -18,25 +18,19 @@ func NewValidateCardUseCase(c interfaces.CardRepositoryInterface, e interfaces.E
 	}
 }
 
-func (v ValidateCardUseCase) ValidateMaxCards(input string) error {
-	cards, err := v.CardRepository.ListByOwner(input)
-
+func (v ValidateCardUseCase) ValidateCard(input string) (*model.Employee, error) {
+	owner, err := v.EmployeeRepository.Get(input)
 	if err != nil {
-		return err
+		return nil, errors.OwnerNotFound
+	}
+
+	cards, err := v.CardRepository.ListByOwner(input)
+	if err != nil {
+		return nil, err
 	}
 
 	if len(cards) >= 2 {
-		return errors.MaxNumberOfCards
-	}
-
-	return nil
-}
-
-func (v ValidateCardUseCase) ValidateOwnerExists(input string) (*model.Employee, error) {
-	owner, err := v.EmployeeRepository.Get(input)
-
-	if err != nil {
-		return nil, errors.OwnerNotFound
+		return nil, errors.MaxNumberOfCards
 	}
 
 	return owner, nil
