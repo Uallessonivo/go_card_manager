@@ -19,3 +19,8 @@ type CardRepositoryInterface interface {
 	Create(input *model.Card) error
 	Delete(id string) error
 }
+
+type CardValidatorInterface interface {
+	ValidateMaxCards(input string) error
+	ValidateOwnerExists(input string) (*model.Employee, error)
+}
