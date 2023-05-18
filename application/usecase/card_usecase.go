@@ -10,12 +10,17 @@ import (
 type CardUseCase struct {
 	CardRepository     interfaces.CardRepositoryInterface
 	EmployeeRepository interfaces.EmployeeRepositoryInterface
+	CardValidator      interfaces.CardValidatorInterface
 }
 
-func NewCardUseCase(u interfaces.CardRepositoryInterface, c interfaces.EmployeeRepositoryInterface) interfaces.CardUseCaseInterface {
+func NewCardUseCase(
+	u interfaces.CardRepositoryInterface,
+	c interfaces.EmployeeRepositoryInterface,
+	v interfaces.CardValidatorInterface) interfaces.CardUseCaseInterface {
 	return &CardUseCase{
 		CardRepository:     u,
 		EmployeeRepository: c,
+		CardValidator:      v,
 	}
 }
 
@@ -50,9 +55,9 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 }
 
 func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, error) {
-	cardOwner, ownerNotFound := c.EmployeeRepository.Get(input.Owner)
-	if ownerNotFound != nil {
-		return nil, errors.OwnerNotFound
+	cardOwner, err := c.CardValidator.ValidateOwnerExists(input.Owner)
+	if err != nil {
+		return nil, err
 	}
 
 	newCard, err := model.MakeCard(input, cardOwner.Name)
@@ -60,9 +65,8 @@ func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, 
 		return nil, err
 	}
 
-	cardExists, _ := c.CardRepository.ListByOwner(newCard.Owner)
-	if len(cardExists) >= 2 {
-		return nil, errors.MaxNumberOfCards
+	if err := c.CardValidator.ValidateMaxCards(newCard.Owner); err != nil {
+		return nil, err
 	}
 
 	er := c.CardRepository.Create(newCard)
