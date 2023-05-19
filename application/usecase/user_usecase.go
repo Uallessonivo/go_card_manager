@@ -72,8 +72,8 @@ func (u *UserUseCase) GetUserByEmail(email string) (*model.UserResponse, error) 
 }
 
 func (u *UserUseCase) UpdateUser(id string, input *model.UserRequest) (*model.UserResponse, error) {
-	_, errr := u.UserRepository.GetByID(id)
-	if errr != nil {
+	_, err := u.UserRepository.GetByID(id)
+	if err != nil {
 		return nil, errors.NotFound
 	}
 
@@ -81,12 +81,12 @@ func (u *UserUseCase) UpdateUser(id string, input *model.UserRequest) (*model.Us
 		return nil, err
 	}
 
-	if er := u.UserRepository.Update(&model.User{
+	if err := u.UserRepository.Update(&model.User{
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: input.Password,
-	}); er != nil {
-		return nil, er
+	}); err != nil {
+		return nil, err
 	}
 
 	return &model.UserResponse{
