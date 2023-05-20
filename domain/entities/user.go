@@ -1,12 +1,13 @@
-package model
+package entities
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/errors"
-	uuid "github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/Uallessonivo/go_card_manager/domain/errors"
+	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {

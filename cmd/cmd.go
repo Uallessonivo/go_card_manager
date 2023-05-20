@@ -33,10 +33,8 @@ func Execute() {
 
 	// USERS USE CASE
 	uCase := usecase.NewUserUseCase(uRepo)
-	// VALIDATE CARDS USE CASE
-	vCase := usecase.NewValidateCardUseCase(cRepo, eRepo)
 	// CARDS USE CASE
-	cCase := usecase.NewCardUseCase(cRepo, eRepo, vCase)
+	cCase := usecase.NewCardUseCase(cRepo, eRepo)
 	// EMPLOYEES USE CASE
 	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
 	// FILE USE CASE

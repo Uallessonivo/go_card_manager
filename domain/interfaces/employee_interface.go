@@ -1,19 +1,19 @@
 package interfaces
 
-import "github.com/Uallessonivo/go_card_manager/domain/model"
+import "github.com/Uallessonivo/go_card_manager/domain/entities"
 
 type EmployeeUseCaseInterface interface {
-	CreateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error)
-	ListEmployees() ([]*model.EmployeeResponse, error)
-	GetFiltered(input string) (*model.EmployeeResponse, error)
-	UpdateEmployee(id string, input *model.EmployeeRequest) (*model.EmployeeResponse, error)
+	CreateEmployee(input *entities.EmployeeRequest) (*entities.EmployeeResponse, error)
+	ListEmployees() ([]*entities.EmployeeResponse, error)
+	GetFiltered(input string) (*entities.EmployeeResponse, error)
+	UpdateEmployee(id string, input *entities.EmployeeRequest) (*entities.EmployeeResponse, error)
 	DeleteEmployee(input string) error
 }
 
 type EmployeeRepositoryInterface interface {
-	List() ([]*model.Employee, error)
-	Get(input string) (*model.Employee, error)
-	Create(input *model.Employee) error
-	Update(input *model.Employee) error
+	List() ([]*entities.Employee, error)
+	Get(input string) (*entities.Employee, error)
+	Create(input *entities.Employee) error
+	Update(input *entities.Employee) error
 	Delete(id string) error
 }

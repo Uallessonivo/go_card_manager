@@ -1,10 +1,11 @@
-package model
+package entities
 
 import (
+	"regexp"
+
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/paemuri/brdoc"
 	uuid "github.com/satori/go.uuid"
-	"regexp"
 )
 
 type Employee struct {

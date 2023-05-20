@@ -2,29 +2,26 @@ package usecase
 
 import (
 	"github.com/Uallessonivo/go_card_manager/application/utils"
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
 type CardUseCase struct {
 	CardRepository     interfaces.CardRepositoryInterface
 	EmployeeRepository interfaces.EmployeeRepositoryInterface
-	CardValidator      interfaces.CardValidatorInterface
 }
 
 func NewCardUseCase(
 	u interfaces.CardRepositoryInterface,
-	c interfaces.EmployeeRepositoryInterface,
-	v interfaces.CardValidatorInterface) interfaces.CardUseCaseInterface {
+	c interfaces.EmployeeRepositoryInterface) interfaces.CardUseCaseInterface {
 	return &CardUseCase{
 		CardRepository:     u,
 		EmployeeRepository: c,
-		CardValidator:      v,
 	}
 }
 
-func (c CardUseCase) ListAllCards() ([]*model.CardResponse, error) {
+func (c CardUseCase) ListAllCards() ([]*entities.CardResponse, error) {
 	items, err := c.CardRepository.List()
 	if err != nil {
 		return nil, err
@@ -34,7 +31,7 @@ func (c CardUseCase) ListAllCards() ([]*model.CardResponse, error) {
 	return results, nil
 }
 
-func (c CardUseCase) ListAllCardsByType(input string) ([]*model.CardResponse, error) {
+func (c CardUseCase) ListAllCardsByType(input string) ([]*entities.CardResponse, error) {
 	items, err := c.CardRepository.ListByTYpe(input)
 	if err != nil {
 		return nil, err
@@ -44,7 +41,7 @@ func (c CardUseCase) ListAllCardsByType(input string) ([]*model.CardResponse, er
 	return results, nil
 }
 
-func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, error) {
+func (c CardUseCase) ListAllCardsByOwner(input string) ([]*entities.CardResponse, error) {
 	items, err := c.CardRepository.ListByOwner(input)
 	if err != nil {
 		return nil, err
@@ -54,13 +51,13 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*model.CardResponse, e
 	return results, nil
 }
 
-func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, error) {
-	cardOwner, err := c.CardValidator.ValidateCard(input.Owner)
+func (c CardUseCase) CreateCard(input *entities.CardRequest) (*entities.CardResponse, error) {
+	cardOwner, err := c.ValidateCard(input.Owner)
 	if err != nil {
 		return nil, err
 	}
 
-	newCard, err := model.MakeCard(input, cardOwner.Name)
+	newCard, err := entities.MakeCard(input, cardOwner.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -70,13 +67,31 @@ func (c CardUseCase) CreateCard(input *model.CardRequest) (*model.CardResponse, 
 		return nil, er
 	}
 
-	response := model.CardResponse{
+	response := entities.CardResponse{
 		ID:     newCard.ID,
 		Type:   newCard.Type,
 		Owner:  newCard.Owner,
 		Serial: newCard.Serial,
 	}
 	return &response, nil
+}
+
+func (c CardUseCase) ValidateCard(input string) (*entities.Employee, error) {
+	owner, err := c.EmployeeRepository.Get(input)
+	if err != nil {
+		return nil, errors.OwnerNotFound
+	}
+
+	cards, err := c.CardRepository.ListByOwner(input)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(cards) >= 2 {
+		return nil, errors.MaxNumberOfCards
+	}
+
+	return owner, nil
 }
 
 func (c CardUseCase) DeleteCard(id string) error {

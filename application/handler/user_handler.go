@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +11,7 @@ type UserHandler struct {
 }
 
 func (u UserHandler) CreateUser(c *fiber.Ctx) error {
-	var user model.UserRequest
+	var user entities.UserRequest
 
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -52,7 +52,7 @@ func (u UserHandler) GetUserByEmail(c *fiber.Ctx) error {
 
 func (u UserHandler) UpdateUser(c *fiber.Ctx) error {
 	param := c.Params("id")
-	var user model.UserRequest
+	var user entities.UserRequest
 
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(400).JSON(err.Error())

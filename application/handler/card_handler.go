@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +11,7 @@ type CardHandler struct {
 }
 
 func (cd CardHandler) CreateCard(c *fiber.Ctx) error {
-	var card model.CardRequest
+	var card entities.CardRequest
 
 	if err := c.BodyParser(&card); err != nil {
 		return c.Status(400).JSON(err.Error())

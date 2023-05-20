@@ -1,4 +1,4 @@
-package model
+package entities
 
 import (
 	"github.com/Uallessonivo/go_card_manager/domain/enums"

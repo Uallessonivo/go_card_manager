@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +14,7 @@ func NewUserRepository(Db *gorm.DB) interfaces.UserRepositoryInterface {
 	return &UserRepositoryDb{Db}
 }
 
-func (u *UserRepositoryDb) Create(input *model.User) error {
+func (u *UserRepositoryDb) Create(input *entities.User) error {
 	err := u.Db.Create(input).Error
 
 	if err != nil {
@@ -24,8 +24,8 @@ func (u *UserRepositoryDb) Create(input *model.User) error {
 	return nil
 }
 
-func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
-	var user model.User
+func (u *UserRepositoryDb) GetByID(id string) (*entities.User, error) {
+	var user entities.User
 
 	err := u.Db.First(&user, "id = ?", id).Error
 
@@ -36,8 +36,8 @@ func (u *UserRepositoryDb) GetByID(id string) (*model.User, error) {
 	return &user, nil
 }
 
-func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
-	var user model.User
+func (u *UserRepositoryDb) GetByEmail(email string) (*entities.User, error) {
+	var user entities.User
 
 	err := u.Db.First(&user, "email = ?", email).Error
 
@@ -48,8 +48,8 @@ func (u *UserRepositoryDb) GetByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (u *UserRepositoryDb) Update(input *model.User) error {
-	err := u.Db.Model(model.User{}).Where("id = ?", input.ID).UpdateColumns(input).Error
+func (u *UserRepositoryDb) Update(input *entities.User) error {
+	err := u.Db.Model(entities.User{}).Where("id = ?", input.ID).UpdateColumns(input).Error
 
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (u *UserRepositoryDb) Update(input *model.User) error {
 }
 
 func (u *UserRepositoryDb) Delete(id string) error {
-	err := u.Db.Delete(&model.User{}, "id = ?", id).Error
+	err := u.Db.Delete(&entities.User{}, "id = ?", id).Error
 
 	if err != nil {
 		return err

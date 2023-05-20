@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +14,7 @@ func NewCardRepository(Db *gorm.DB) interfaces.CardRepositoryInterface {
 	return &CardRepository{Db}
 }
 
-func (c *CardRepository) Create(input *model.Card) error {
+func (c *CardRepository) Create(input *entities.Card) error {
 	err := c.Db.Create(&input).Error
 
 	if err != nil {
@@ -24,8 +24,8 @@ func (c *CardRepository) Create(input *model.Card) error {
 	return nil
 }
 
-func (c *CardRepository) List() ([]*model.Card, error) {
-	var cards []*model.Card
+func (c *CardRepository) List() ([]*entities.Card, error) {
+	var cards []*entities.Card
 
 	err := c.Db.Find(&cards).Error
 
@@ -36,8 +36,8 @@ func (c *CardRepository) List() ([]*model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) ListByTYpe(input string) ([]*model.Card, error) {
-	var cards []*model.Card
+func (c *CardRepository) ListByTYpe(input string) ([]*entities.Card, error) {
+	var cards []*entities.Card
 
 	err := c.Db.Find(&cards, "type = ?", input).Error
 
@@ -48,8 +48,8 @@ func (c *CardRepository) ListByTYpe(input string) ([]*model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) ListByOwner(input string) ([]*model.Card, error) {
-	var cards []*model.Card
+func (c *CardRepository) ListByOwner(input string) ([]*entities.Card, error) {
+	var cards []*entities.Card
 
 	err := c.Db.Find(&cards, "owner = ?", input).Error
 
@@ -60,8 +60,8 @@ func (c *CardRepository) ListByOwner(input string) ([]*model.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) GetByOwner(input string) (*model.Card, error) {
-	var card *model.Card
+func (c *CardRepository) GetByOwner(input string) (*entities.Card, error) {
+	var card *entities.Card
 
 	err := c.Db.First(&card, "owner = ?", input).Error
 
@@ -72,8 +72,8 @@ func (c *CardRepository) GetByOwner(input string) (*model.Card, error) {
 	return card, nil
 }
 
-func (c *CardRepository) GetById(input string) (*model.Card, error) {
-	var card *model.Card
+func (c *CardRepository) GetById(input string) (*entities.Card, error) {
+	var card *entities.Card
 
 	err := c.Db.First(&card, "id = ?", input).Error
 
@@ -85,7 +85,7 @@ func (c *CardRepository) GetById(input string) (*model.Card, error) {
 }
 
 func (c *CardRepository) Delete(id string) error {
-	err := c.Db.Delete(&model.Card{}, "id = ?", id).Error
+	err := c.Db.Delete(&entities.Card{}, "id = ?", id).Error
 
 	if err != nil {
 		return err

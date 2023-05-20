@@ -1,9 +1,9 @@
 package usecase
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
 type UserUseCase struct {
@@ -16,8 +16,8 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 	}
 }
 
-func (u *UserUseCase) CreateUser(input *model.UserRequest) (*model.UserResponse, error) {
-	newUser, err := model.MakeUser(input)
+func (u *UserUseCase) CreateUser(input *entities.UserRequest) (*entities.UserResponse, error) {
+	newUser, err := entities.MakeUser(input)
 	if err != nil {
 		return nil, err
 	}
@@ -32,21 +32,21 @@ func (u *UserUseCase) CreateUser(input *model.UserRequest) (*model.UserResponse,
 		return nil, er
 	}
 
-	return &model.UserResponse{
+	return &entities.UserResponse{
 		ID:    newUser.ID,
 		Name:  newUser.Name,
 		Email: newUser.Email,
 	}, nil
 }
 
-func (u *UserUseCase) GetUserByID(id string) (*model.UserResponse, error) {
+func (u *UserUseCase) GetUserByID(id string) (*entities.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByID(id)
 
 	if err != nil {
 		return nil, errors.NotFound
 	}
 
-	response := model.UserResponse{
+	response := entities.UserResponse{
 		ID:    userFound.ID,
 		Name:  userFound.Name,
 		Email: userFound.Email,
@@ -55,14 +55,14 @@ func (u *UserUseCase) GetUserByID(id string) (*model.UserResponse, error) {
 	return &response, nil
 }
 
-func (u *UserUseCase) GetUserByEmail(email string) (*model.UserResponse, error) {
+func (u *UserUseCase) GetUserByEmail(email string) (*entities.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByEmail(email)
 
 	if err != nil {
 		return nil, errors.NotFound
 	}
 
-	response := model.UserResponse{
+	response := entities.UserResponse{
 		ID:    userFound.ID,
 		Name:  userFound.Name,
 		Email: userFound.Email,
@@ -71,17 +71,17 @@ func (u *UserUseCase) GetUserByEmail(email string) (*model.UserResponse, error) 
 	return &response, nil
 }
 
-func (u *UserUseCase) UpdateUser(id string, input *model.UserRequest) (*model.UserResponse, error) {
+func (u *UserUseCase) UpdateUser(id string, input *entities.UserRequest) (*entities.UserResponse, error) {
 	_, err := u.UserRepository.GetByID(id)
 	if err != nil {
 		return nil, errors.NotFound
 	}
 
-	if err := model.ValidateUser(input); err != nil {
+	if err := entities.ValidateUser(input); err != nil {
 		return nil, err
 	}
 
-	if err := u.UserRepository.Update(&model.User{
+	if err := u.UserRepository.Update(&entities.User{
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: input.Password,
@@ -89,7 +89,7 @@ func (u *UserUseCase) UpdateUser(id string, input *model.UserRequest) (*model.Us
 		return nil, err
 	}
 
-	return &model.UserResponse{
+	return &entities.UserResponse{
 		ID:    id,
 		Name:  input.Name,
 		Email: input.Email,

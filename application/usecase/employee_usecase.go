@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"github.com/Uallessonivo/go_card_manager/application/utils"
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 )
 
 type EmployeeUseCase struct {
@@ -19,8 +19,8 @@ func NewEmployeeUseCase(u interfaces.EmployeeRepositoryInterface, c interfaces.C
 	}
 }
 
-func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.EmployeeResponse, error) {
-	newEmployee, err := model.MakeEmployee(input)
+func (e EmployeeUseCase) CreateEmployee(input *entities.EmployeeRequest) (*entities.EmployeeResponse, error) {
+	newEmployee, err := entities.MakeEmployee(input)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.Em
 	cardsFound, _ := e.CardRepository.ListByOwner(newEmployee.Cpf)
 	cards := utils.CardResponse(cardsFound)
 
-	return &model.EmployeeResponse{
+	return &entities.EmployeeResponse{
 		ID:    newEmployee.ID,
 		Name:  newEmployee.Name,
 		Cpf:   newEmployee.Cpf,
@@ -45,7 +45,7 @@ func (e EmployeeUseCase) CreateEmployee(input *model.EmployeeRequest) (*model.Em
 	}, nil
 }
 
-func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
+func (e EmployeeUseCase) ListEmployees() ([]*entities.EmployeeResponse, error) {
 	employees, err := e.EmployeeRepository.List()
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (e EmployeeUseCase) ListEmployees() ([]*model.EmployeeResponse, error) {
 	return employeeResponses, nil
 }
 
-func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, error) {
+func (e EmployeeUseCase) GetFiltered(input string) (*entities.EmployeeResponse, error) {
 	employeeFound, err := e.EmployeeRepository.Get(input)
 
 	if err != nil {
@@ -68,7 +68,7 @@ func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, err
 	cardsFound, _ := e.CardRepository.ListByOwner(employeeFound.Cpf)
 	cards := utils.CardResponse(cardsFound)
 
-	return &model.EmployeeResponse{
+	return &entities.EmployeeResponse{
 		ID:    employeeFound.ID,
 		Name:  employeeFound.Name,
 		Cpf:   employeeFound.Cpf,
@@ -76,17 +76,17 @@ func (e EmployeeUseCase) GetFiltered(input string) (*model.EmployeeResponse, err
 	}, nil
 }
 
-func (e EmployeeUseCase) UpdateEmployee(id string, input *model.EmployeeRequest) (*model.EmployeeResponse, error) {
+func (e EmployeeUseCase) UpdateEmployee(id string, input *entities.EmployeeRequest) (*entities.EmployeeResponse, error) {
 	_, err := e.EmployeeRepository.Get(id)
 	if err != nil {
 		return nil, errors.NotFound
 	}
 
-	if validateErr := model.ValidateEmployee(input); validateErr != nil {
+	if validateErr := entities.ValidateEmployee(input); validateErr != nil {
 		return nil, errors.InvalidFields
 	}
 
-	if updateErr := e.EmployeeRepository.Update(&model.Employee{
+	if updateErr := e.EmployeeRepository.Update(&entities.Employee{
 		ID:   id,
 		Name: input.Name,
 		Cpf:  input.Cpf,
@@ -94,7 +94,7 @@ func (e EmployeeUseCase) UpdateEmployee(id string, input *model.EmployeeRequest)
 		return nil, updateErr
 	}
 
-	return &model.EmployeeResponse{
+	return &entities.EmployeeResponse{
 		ID:   id,
 		Name: input.Name,
 		Cpf:  input.Cpf,

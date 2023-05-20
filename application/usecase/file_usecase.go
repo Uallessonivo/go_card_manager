@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 )
 
 type FileUseCase struct {
@@ -22,8 +22,8 @@ func NewFileUseCase(
 	}
 }
 
-func (f FileUseCase) SaveData(input []*model.CardRequest) (*model.UploadResponse, error) {
-	var failedCards []*model.CardRequest
+func (f FileUseCase) SaveData(input []*entities.CardRequest) (*entities.UploadResponse, error) {
+	var failedCards []*entities.CardRequest
 
 	for _, card := range input {
 		if _, err := f.CardeUseCase.CreateCard(card); err != nil {
@@ -32,13 +32,13 @@ func (f FileUseCase) SaveData(input []*model.CardRequest) (*model.UploadResponse
 	}
 
 	if len(failedCards) > 0 {
-		return &model.UploadResponse{
+		return &entities.UploadResponse{
 			Message:     "Some cards are not inserted into the database",
 			FailedCards: failedCards,
 		}, nil
 	}
 
-	return &model.UploadResponse{
+	return &entities.UploadResponse{
 		Message: "All cards have been saved in the database",
 	}, nil
 }

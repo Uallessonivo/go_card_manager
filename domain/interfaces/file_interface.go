@@ -1,11 +1,11 @@
 package interfaces
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/model"
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 )
 
 type FileUseCaseInterface interface {
-	SaveData(input []*model.CardRequest) (*model.UploadResponse, error)
+	SaveData(input []*entities.CardRequest) (*entities.UploadResponse, error)
 	GenerateCardsReport() error
 	GenerateEmployeesReport() error
 }

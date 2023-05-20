@@ -1,25 +1,22 @@
 package interfaces
 
-import "github.com/Uallessonivo/go_card_manager/domain/model"
+import "github.com/Uallessonivo/go_card_manager/domain/entities"
 
 type CardUseCaseInterface interface {
-	ListAllCards() ([]*model.CardResponse, error)
-	ListAllCardsByType(input string) ([]*model.CardResponse, error)
-	ListAllCardsByOwner(input string) ([]*model.CardResponse, error)
-	CreateCard(input *model.CardRequest) (*model.CardResponse, error)
+	CreateCard(input *entities.CardRequest) (*entities.CardResponse, error)
 	DeleteCard(id string) error
+	ValidateCard(input string) (*entities.Employee, error)
+	ListAllCards() ([]*entities.CardResponse, error)
+	ListAllCardsByType(input string) ([]*entities.CardResponse, error)
+	ListAllCardsByOwner(input string) ([]*entities.CardResponse, error)
 }
 
 type CardRepositoryInterface interface {
-	List() ([]*model.Card, error)
-	ListByTYpe(input string) ([]*model.Card, error)
-	ListByOwner(input string) ([]*model.Card, error)
-	GetByOwner(input string) (*model.Card, error)
-	GetById(input string) (*model.Card, error)
-	Create(input *model.Card) error
+	Create(input *entities.Card) error
 	Delete(id string) error
-}
-
-type CardValidatorInterface interface {
-	ValidateCard(input string) (*model.Employee, error)
+	List() ([]*entities.Card, error)
+	ListByTYpe(input string) ([]*entities.Card, error)
+	ListByOwner(input string) ([]*entities.Card, error)
+	GetByOwner(input string) (*entities.Card, error)
+	GetById(input string) (*entities.Card, error)
 }

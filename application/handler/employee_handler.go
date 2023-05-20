@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
-	"github.com/Uallessonivo/go_card_manager/domain/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +11,7 @@ type EmployeeHandler struct {
 }
 
 func (h EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
-	var employee model.EmployeeRequest
+	var employee entities.EmployeeRequest
 
 	if err := c.BodyParser(&employee); err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -58,7 +58,7 @@ func (h EmployeeHandler) DeleteEmployee(c *fiber.Ctx) error {
 
 func (h EmployeeHandler) UpdateEmployee(c *fiber.Ctx) error {
 	param := c.Params("id")
-	var employee model.EmployeeRequest
+	var employee entities.EmployeeRequest
 
 	if err := c.BodyParser(&employee); err != nil {
 		return c.Status(400).JSON(err.Error())

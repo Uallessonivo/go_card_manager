@@ -4,8 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Uallessonivo/go_card_manager/domain/model"
-
+	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -32,7 +31,7 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	if os.Getenv("AUTO_MIGRATE") == "true" {
-		dbErr := db.AutoMigrate(&model.User{}, &model.Card{}, &model.Employee{})
+		dbErr := db.AutoMigrate(&entities.User{}, &entities.Card{}, &entities.Employee{})
 		if dbErr != nil {
 			return
 		}
