@@ -3,6 +3,7 @@ package utils
 import (
 	"mime/multipart"
 	"path/filepath"
+	"strings"
 
 	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/enums"
@@ -39,12 +40,14 @@ func ExtractDataFromExcelFile(file *multipart.FileHeader) ([]*entities.CardReque
 			continue
 		}
 
+		owner := strings.Replace(row[2], ".", "", -1)
+		owner = strings.Replace(owner, "-", "", -1)
+
 		cards = append(cards, &entities.CardRequest{
 			Type:   cardTypes[row[4]],
 			Serial: row[1],
-			Owner:  row[2],
+			Owner:  owner,
 		})
-		println(row)
 	}
 
 	return cards, nil
