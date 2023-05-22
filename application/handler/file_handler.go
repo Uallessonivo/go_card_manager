@@ -34,15 +34,22 @@ func (h FileHandler) UploadFile(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"Result": response.Message})
 }
 
-// TOOD
+// TOOD: Improve
 func (h FileHandler) DownloadCardReport(c *fiber.Ctx) error {
-	if err := h.UseCase.GenerateCardsReport(); err != nil {
-		return err
+	param := c.Query("type")
+
+	buf, err := h.UseCase.GenerateCardsReport(param)
+	if err != nil {
+		return c.Status(500).SendString("Error generating report.")
 	}
-	return nil
+
+	c.Set("Content-Type", "text/csv")
+	c.Set("Content-Disposition", "attachment; filename=relatorio.csv")
+
+	return c.Send(buf.Bytes())
 }
 
-// TODO
+// TODO: Implement
 func (h FileHandler) DownloadEmployeeReport(c *fiber.Ctx) error {
 	if err := h.UseCase.GenerateEmployeesReport(); err != nil {
 		return err

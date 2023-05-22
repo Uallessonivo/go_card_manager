@@ -1,8 +1,13 @@
 package usecase
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
+	"bytes"
+	"encoding/csv"
+	"os"
+	"strings"
+
 	"github.com/Uallessonivo/go_card_manager/domain/entities"
+	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 )
 
 type FileUseCase struct {
@@ -43,9 +48,32 @@ func (f FileUseCase) SaveData(input []*entities.CardRequest) (*entities.UploadRe
 	}, nil
 }
 
-func (f FileUseCase) GenerateCardsReport() error {
-	//TODO implement me
-	panic("implement me")
+// TODO: Improve
+func (f FileUseCase) GenerateCardsReport(cardType string) (*bytes.Buffer, error) {
+	buf := new(bytes.Buffer)
+	writer := csv.NewWriter(buf)
+
+	header := os.Getenv("CSV_HEADER")
+	columns := strings.Split(header, ",")
+	writer.Write(columns)
+
+	cards, err := f.CardRepository.ListByTYpe(cardType)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, card := range cards {
+		row := []string{card.Serial, card.Owner, "", card.Name}
+		writer.Write(row)
+	}
+
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		return nil, err
+	}
+
+	return buf, nil
 }
 
 func (f FileUseCase) GenerateEmployeesReport() error {
