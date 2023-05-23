@@ -14,12 +14,12 @@ func (h EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
 	var employee entities.EmployeeRequest
 
 	if err := c.BodyParser(&employee); err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	result, er := h.UseCase.CreateEmployee(&employee)
-	if er != nil {
-		return c.Status(400).JSON(er.Error())
+	result, err := h.UseCase.CreateEmployee(&employee)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(200).JSON(result)
@@ -28,7 +28,7 @@ func (h EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
 func (h EmployeeHandler) ListEmployees(c *fiber.Ctx) error {
 	results, err := h.UseCase.ListEmployees()
 	if err != nil {
-		return c.Status(404).JSON(err.Error())
+		return c.Status(404).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(200).JSON(&results)
 }
@@ -39,7 +39,7 @@ func (h EmployeeHandler) GetEmployee(c *fiber.Ctx) error {
 	result, err := h.UseCase.GetFiltered(param)
 
 	if err != nil {
-		return c.Status(404).JSON(err.Error())
+		return c.Status(404).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(200).JSON(&result)
@@ -50,7 +50,7 @@ func (h EmployeeHandler) DeleteEmployee(c *fiber.Ctx) error {
 	err := h.UseCase.DeleteEmployee(param)
 
 	if err != nil {
-		return c.Status(404).JSON(err.Error())
+		return c.Status(404).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(200).JSON("OK")
@@ -61,13 +61,13 @@ func (h EmployeeHandler) UpdateEmployee(c *fiber.Ctx) error {
 	var employee entities.EmployeeRequest
 
 	if err := c.BodyParser(&employee); err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	result, err := h.UseCase.UpdateEmployee(param, &employee)
 
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(200).JSON(result)

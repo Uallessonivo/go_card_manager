@@ -13,18 +13,17 @@ type FileHandler struct {
 func (h FileHandler) UploadFile(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	cards, err := utils.ExtractDataFromExcelFile(file)
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	response, err := h.UseCase.SaveData(cards)
-
 	if err != nil {
-		return c.Status(500).JSON(err.Error())
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	if response.FailedCards != nil {
@@ -51,7 +50,7 @@ func (h FileHandler) DownloadCardReport(c *fiber.Ctx) error {
 func (h FileHandler) DownloadEmployeeReport(c *fiber.Ctx) error {
 	buf, err := h.UseCase.GenerateEmployeesReport()
 	if err != nil {
-		return c.Status(500).SendString("Error generating report.")
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	c.Set("Content-Type", "text/csv")
