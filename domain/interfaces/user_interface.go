@@ -6,6 +6,7 @@ type UserUseCaseInterface interface {
 	CreateUser(input *entities.UserRequest) (*entities.UserResponse, error)
 	GetUserByID(id string) (*entities.UserResponse, error)
 	GetUserByEmail(email string) (*entities.UserResponse, error)
+	CheckUserPass(email string, password string) error
 	UpdateUser(id string, input *entities.UserRequest) (*entities.UserResponse, error)
 	DeleteUser(id string) error
 }

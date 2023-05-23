@@ -16,7 +16,7 @@ func NewUserUseCase(u interfaces.UserRepositoryInterface) interfaces.UserUseCase
 	}
 }
 
-func (u *UserUseCase) CreateUser(input *entities.UserRequest) (*entities.UserResponse, error) {
+func (u UserUseCase) CreateUser(input *entities.UserRequest) (*entities.UserResponse, error) {
 	newUser, err := entities.MakeUser(input)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (u *UserUseCase) CreateUser(input *entities.UserRequest) (*entities.UserRes
 	}, nil
 }
 
-func (u *UserUseCase) GetUserByID(id string) (*entities.UserResponse, error) {
+func (u UserUseCase) GetUserByID(id string) (*entities.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByID(id)
 
 	if err != nil {
@@ -55,7 +55,7 @@ func (u *UserUseCase) GetUserByID(id string) (*entities.UserResponse, error) {
 	return &response, nil
 }
 
-func (u *UserUseCase) GetUserByEmail(email string) (*entities.UserResponse, error) {
+func (u UserUseCase) GetUserByEmail(email string) (*entities.UserResponse, error) {
 	userFound, err := u.UserRepository.GetByEmail(email)
 
 	if err != nil {
@@ -71,7 +71,25 @@ func (u *UserUseCase) GetUserByEmail(email string) (*entities.UserResponse, erro
 	return &response, nil
 }
 
-func (u *UserUseCase) UpdateUser(id string, input *entities.UserRequest) (*entities.UserResponse, error) {
+func (u UserUseCase) CheckUserPass(email string, password string) error {
+	user, err := u.UserRepository.GetByEmail(email)
+	if err != nil {
+		return errors.NotFound
+	}
+
+	hashedPass, err := entities.HashPassword(password)
+	if err != nil {
+		return err
+	}
+
+	if user.Password != hashedPass {
+		return errors.InvalidLogin
+	}
+
+	return nil
+}
+
+func (u UserUseCase) UpdateUser(id string, input *entities.UserRequest) (*entities.UserResponse, error) {
 	_, err := u.UserRepository.GetByID(id)
 	if err != nil {
 		return nil, errors.NotFound
@@ -96,7 +114,7 @@ func (u *UserUseCase) UpdateUser(id string, input *entities.UserRequest) (*entit
 	}, nil
 }
 
-func (u *UserUseCase) DeleteUser(id string) error {
+func (u UserUseCase) DeleteUser(id string) error {
 	_, err := u.UserRepository.GetByID(id)
 	if err != nil {
 		return errors.NotFound
