@@ -40,7 +40,7 @@ func passwordIsValid(password string) bool {
 	return matched
 }
 
-func hashPassword(password string) (string, error) {
+func HashPassword(password string) (string, error) {
 	cost, _ := strconv.Atoi(os.Getenv("BCRYPT_COST"))
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	return string(bytes), err
@@ -59,7 +59,7 @@ func MakeUser(input *UserRequest) (*User, error) {
 		return nil, errors.InvalidPassword
 	}
 
-	passwordHash, err := hashPassword(input.Password)
+	passwordHash, err := HashPassword(input.Password)
 	if err != nil {
 		return nil, err
 	}
