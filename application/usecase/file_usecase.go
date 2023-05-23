@@ -48,7 +48,6 @@ func (f FileUseCase) SaveData(input []*entities.CardRequest) (*entities.UploadRe
 	}, nil
 }
 
-// TODO: Improve
 func (f FileUseCase) GenerateCardsReport(cardType string) (*bytes.Buffer, error) {
 	buf := new(bytes.Buffer)
 	writer := csv.NewWriter(buf)
@@ -73,10 +72,38 @@ func (f FileUseCase) GenerateCardsReport(cardType string) (*bytes.Buffer, error)
 		return nil, err
 	}
 
+	defer writer.Error()
+	defer writer.Flush()
+
 	return buf, nil
 }
 
-func (f FileUseCase) GenerateEmployeesReport() error {
-	//TODO implement me
-	panic("implement me")
+func (f FileUseCase) GenerateEmployeesReport() (*bytes.Buffer, error) {
+	buf := new(bytes.Buffer)
+	writer := csv.NewWriter(buf)
+
+	header := os.Getenv("CSV_EMPLOYEE_HEADER")
+	columns := strings.Split(header, ",")
+	writer.Write(columns)
+
+	employees, err := f.EmployeeRepository.List()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, employee := range employees {
+		row := []string{employee.ID, employee.Cpf, employee.Name}
+		writer.Write(row)
+	}
+
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		return nil, err
+	}
+
+	defer writer.Error()
+	defer writer.Flush()
+
+	return buf, nil
 }

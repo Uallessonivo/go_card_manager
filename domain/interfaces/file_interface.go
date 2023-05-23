@@ -9,5 +9,5 @@ import (
 type FileUseCaseInterface interface {
 	SaveData(input []*entities.CardRequest) (*entities.UploadResponse, error)
 	GenerateCardsReport(cardType string) (*bytes.Buffer, error)
-	GenerateEmployeesReport() error
+	GenerateEmployeesReport() (*bytes.Buffer, error)
 }

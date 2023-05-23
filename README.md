@@ -1,6 +1,6 @@
 # Card Manager project with Clean architecture
 
-### Description
+## Description
 
 This project aims to control corporate cards that are used internally.
 
@@ -11,11 +11,11 @@ This project aims to control corporate cards that are used internally.
 
 ### Stack
 
-* Golang
-* Fiber
-* Gorm
-* Postgres
-* Docker
+- Golang
+- Fiber
+- Gorm
+- Postgres
+- Docker
 
 ### Task List
 
@@ -24,6 +24,6 @@ This project aims to control corporate cards that are used internally.
 - [X] Cards can only be registered if the employee (owner) exists.
 - [X] To register a user capable of handling this data, it will be necessary to send a key that is generated internally.
 - [X] The app must be able to receive an CSV file and save those data in the database.
-- [ ] This app must be able to generate a CSV report with the data from these cards and the information of the employee who has it.
-- [ ] This report must be generated for each card type.
-- [ ] The CSV file must contain this layout: [ SERIAL, CPF, VALUE, NAME ]
+- [X] This app must be able to generate a CSV report with the data from these cards and the information of the employee who has it.
+- [X] This report must be generated for each card type.
+- [X] The CSV file must contain this layout: [ SERIAL, CPF, VALUE, NAME ]
