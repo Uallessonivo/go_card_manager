@@ -2,10 +2,9 @@ package usecase
 
 import (
 	"bytes"
-	"encoding/csv"
 	"os"
-	"strings"
 
+	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/domain/entities"
 	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
 )
@@ -49,61 +48,45 @@ func (f FileUseCase) SaveData(input []*entities.CardRequest) (*entities.UploadRe
 }
 
 func (f FileUseCase) GenerateCardsReport(cardType string) (*bytes.Buffer, error) {
-	buf := new(bytes.Buffer)
-	writer := csv.NewWriter(buf)
-
 	header := os.Getenv("CSV_HEADER")
-	columns := strings.Split(header, ",")
-	writer.Write(columns)
 
 	cards, err := f.CardRepository.ListByTYpe(cardType)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, card := range cards {
-		row := []string{card.Serial, card.Owner, "", card.Name}
-		writer.Write(row)
+	rows := make([][]string, len(cards))
+	for i, card := range cards {
+		rows[i] = []string{card.Serial, card.Owner, "", card.Name}
 	}
 
-	writer.Flush()
+	buf, err := utils.GenerateCSVFile(header, rows)
 
-	if err := writer.Error(); err != nil {
+	if err != nil {
 		return nil, err
 	}
-
-	defer writer.Error()
-	defer writer.Flush()
 
 	return buf, nil
 }
 
 func (f FileUseCase) GenerateEmployeesReport() (*bytes.Buffer, error) {
-	buf := new(bytes.Buffer)
-	writer := csv.NewWriter(buf)
-
 	header := os.Getenv("CSV_EMPLOYEE_HEADER")
-	columns := strings.Split(header, ",")
-	writer.Write(columns)
 
 	employees, err := f.EmployeeRepository.List()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, employee := range employees {
-		row := []string{employee.ID, employee.Cpf, employee.Name}
-		writer.Write(row)
+	rows := make([][]string, len(employees))
+	for i, employee := range employees {
+		rows[i] = []string{employee.ID, employee.Cpf, employee.Name}
 	}
 
-	writer.Flush()
+	buf, err := utils.GenerateCSVFile(header, rows)
 
-	if err := writer.Error(); err != nil {
+	if err != nil {
 		return nil, err
 	}
-
-	defer writer.Error()
-	defer writer.Flush()
 
 	return buf, nil
 }
