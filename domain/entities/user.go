@@ -46,17 +46,25 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
+func ValidateUser(input *UserRequest) error {
+	if !emailIsValid(input.Email) {
+		return errors.InvalidEmail
+	}
+
+	if !passwordIsValid(input.Password) {
+		return errors.InvalidPassword
+	}
+
+	return nil
+}
+
 func MakeUser(input *UserRequest) (*User, error) {
 	if input.SecretKey != os.Getenv("SECRET_KEY") {
 		return nil, errors.InvalidParams
 	}
 
-	if !emailIsValid(input.Email) {
-		return nil, errors.InvalidEmail
-	}
-
-	if !passwordIsValid(input.Password) {
-		return nil, errors.InvalidPassword
+	if err := ValidateUser(input); err != nil {
+		return nil, err
 	}
 
 	passwordHash, err := HashPassword(input.Password)
@@ -70,16 +78,4 @@ func MakeUser(input *UserRequest) (*User, error) {
 		Email:    input.Email,
 		Password: passwordHash,
 	}, nil
-}
-
-func ValidateUser(input *UserRequest) error {
-	if !emailIsValid(input.Email) {
-		return errors.InvalidEmail
-	}
-
-	if !passwordIsValid(input.Password) {
-		return errors.InvalidPassword
-	}
-
-	return nil
 }
