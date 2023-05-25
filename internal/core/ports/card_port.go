@@ -1,24 +1,24 @@
 package ports
 
 import (
-	entities2 "github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
 )
 
 type CardService interface {
-	CreateCard(input *entities2.CardRequest) (*entities2.CardResponse, error)
+	CreateCard(input *models.CardRequest) (*models.CardResponse, error)
 	DeleteCard(id string) error
-	ValidateCard(input string) (*entities2.Employee, error)
-	ListAllCards() ([]*entities2.CardResponse, error)
-	ListAllCardsByType(input string) ([]*entities2.CardResponse, error)
-	ListAllCardsByOwner(input string) ([]*entities2.CardResponse, error)
+	ValidateCard(input string) (*models.Employee, error)
+	ListAllCards() ([]*models.CardResponse, error)
+	ListAllCardsByType(input string) ([]*models.CardResponse, error)
+	ListAllCardsByOwner(input string) ([]*models.CardResponse, error)
 }
 
 type CardRepository interface {
-	Create(input *entities2.Card) error
+	Create(input *models.Card) error
 	Delete(id string) error
-	List() ([]*entities2.Card, error)
-	ListByTYpe(input string) ([]*entities2.Card, error)
-	ListByOwner(input string) ([]*entities2.Card, error)
-	GetByOwner(input string) (*entities2.Card, error)
-	GetById(input string) (*entities2.Card, error)
+	List() ([]*models.Card, error)
+	ListByTYpe(input string) ([]*models.Card, error)
+	ListByOwner(input string) ([]*models.Card, error)
+	GetByOwner(input string) (*models.Card, error)
+	GetById(input string) (*models.Card, error)
 }

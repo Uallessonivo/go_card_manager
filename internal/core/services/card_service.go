@@ -3,8 +3,8 @@ package services
 import (
 	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/internal/core/domain/errors"
-	entities2 "github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
-	ports "github.com/Uallessonivo/go_card_manager/internal/core/ports"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
+	"github.com/Uallessonivo/go_card_manager/internal/core/ports"
 )
 
 type CardUseCase struct {
@@ -21,7 +21,7 @@ func NewCardService(
 	}
 }
 
-func (c CardUseCase) ListAllCards() ([]*entities2.CardResponse, error) {
+func (c CardUseCase) ListAllCards() ([]*models.CardResponse, error) {
 	items, err := c.CardRepository.List()
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (c CardUseCase) ListAllCards() ([]*entities2.CardResponse, error) {
 	return results, nil
 }
 
-func (c CardUseCase) ListAllCardsByType(input string) ([]*entities2.CardResponse, error) {
+func (c CardUseCase) ListAllCardsByType(input string) ([]*models.CardResponse, error) {
 	items, err := c.CardRepository.ListByTYpe(input)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (c CardUseCase) ListAllCardsByType(input string) ([]*entities2.CardResponse
 	return results, nil
 }
 
-func (c CardUseCase) ListAllCardsByOwner(input string) ([]*entities2.CardResponse, error) {
+func (c CardUseCase) ListAllCardsByOwner(input string) ([]*models.CardResponse, error) {
 	items, err := c.CardRepository.ListByOwner(input)
 	if err != nil {
 		return nil, err
@@ -51,13 +51,13 @@ func (c CardUseCase) ListAllCardsByOwner(input string) ([]*entities2.CardRespons
 	return results, nil
 }
 
-func (c CardUseCase) CreateCard(input *entities2.CardRequest) (*entities2.CardResponse, error) {
+func (c CardUseCase) CreateCard(input *models.CardRequest) (*models.CardResponse, error) {
 	cardOwner, err := c.ValidateCard(input.Owner)
 	if err != nil {
 		return nil, err
 	}
 
-	newCard, err := entities2.MakeCard(input, cardOwner.Name)
+	newCard, err := models.MakeCard(input, cardOwner.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c CardUseCase) CreateCard(input *entities2.CardRequest) (*entities2.CardRe
 		return nil, er
 	}
 
-	response := entities2.CardResponse{
+	response := models.CardResponse{
 		ID:     newCard.ID,
 		Type:   newCard.Type,
 		Owner:  newCard.Owner,
@@ -76,7 +76,7 @@ func (c CardUseCase) CreateCard(input *entities2.CardRequest) (*entities2.CardRe
 	return &response, nil
 }
 
-func (c CardUseCase) ValidateCard(input string) (*entities2.Employee, error) {
+func (c CardUseCase) ValidateCard(input string) (*models.Employee, error) {
 	owner, err := c.EmployeeRepository.Get(input)
 	if err != nil {
 		return nil, errors.OwnerNotFound

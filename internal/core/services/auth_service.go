@@ -2,15 +2,15 @@ package services
 
 import (
 	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
-	ports2 "github.com/Uallessonivo/go_card_manager/internal/core/ports"
+	ports "github.com/Uallessonivo/go_card_manager/internal/core/ports"
 )
 
 type AuthUseCase struct {
-	Auth        ports2.AuthService
-	UserService ports2.UserService
+	Auth        ports.AuthService
+	UserService ports.UserService
 }
 
-func NewAuthService(u ports2.UserService) ports2.AuthService {
+func NewAuthService(u ports.UserService) ports.AuthService {
 	return &AuthUseCase{
 		UserService: u,
 	}

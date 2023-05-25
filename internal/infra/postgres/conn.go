@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	entities2 "github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
 	"log"
 	"os"
 
@@ -10,11 +10,11 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type Dbinstance struct {
+type DbInstance struct {
 	Db *gorm.DB
 }
 
-var DB Dbinstance
+var DB DbInstance
 
 func ConnectDB() {
 	dsn := os.Getenv("DATABASE_DSN")
@@ -31,13 +31,13 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	if os.Getenv("AUTO_MIGRATE") == "true" {
-		dbErr := db.AutoMigrate(&entities2.User{}, &entities2.Card{}, &entities2.Employee{})
+		dbErr := db.AutoMigrate(&models.User{}, &models.Card{}, &models.Employee{})
 		if dbErr != nil {
 			return
 		}
 	}
 
-	DB = Dbinstance{
+	DB = DbInstance{
 		Db: db,
 	}
 }

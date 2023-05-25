@@ -2,23 +2,23 @@ package services
 
 import (
 	"bytes"
-	entities2 "github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
-	ports2 "github.com/Uallessonivo/go_card_manager/internal/core/ports"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
+	"github.com/Uallessonivo/go_card_manager/internal/core/ports"
 	"os"
 
 	"github.com/Uallessonivo/go_card_manager/application/utils"
 )
 
 type FileUseCase struct {
-	EmployeeRepository ports2.EmployeeRepository
-	CardRepository     ports2.CardRepository
-	CardService        ports2.CardService
+	EmployeeRepository ports.EmployeeRepository
+	CardRepository     ports.CardRepository
+	CardService        ports.CardService
 }
 
 func NewFileService(
-	e ports2.EmployeeRepository,
-	c ports2.CardRepository,
-	u ports2.CardService) ports2.FileService {
+	e ports.EmployeeRepository,
+	c ports.CardRepository,
+	u ports.CardService) ports.FileService {
 	return &FileUseCase{
 		EmployeeRepository: e,
 		CardRepository:     c,
@@ -26,8 +26,8 @@ func NewFileService(
 	}
 }
 
-func (f FileUseCase) SaveData(input []*entities2.CardRequest) (*entities2.UploadResponse, error) {
-	var failedCards []*entities2.CardRequest
+func (f FileUseCase) SaveData(input []*models.CardRequest) (*models.UploadResponse, error) {
+	var failedCards []*models.CardRequest
 
 	for _, card := range input {
 		if _, err := f.CardService.CreateCard(card); err != nil {
@@ -36,13 +36,13 @@ func (f FileUseCase) SaveData(input []*entities2.CardRequest) (*entities2.Upload
 	}
 
 	if len(failedCards) > 0 {
-		return &entities2.UploadResponse{
+		return &models.UploadResponse{
 			Message:     "Some cards are not inserted into the postgres",
 			FailedCards: failedCards,
 		}, nil
 	}
 
-	return &entities2.UploadResponse{
+	return &models.UploadResponse{
 		Message: "All cards have been saved in the postgres",
 	}, nil
 }

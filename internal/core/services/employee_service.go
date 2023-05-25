@@ -4,15 +4,15 @@ import (
 	"github.com/Uallessonivo/go_card_manager/application/utils"
 	"github.com/Uallessonivo/go_card_manager/internal/core/domain/errors"
 	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
-	ports2 "github.com/Uallessonivo/go_card_manager/internal/core/ports"
+	"github.com/Uallessonivo/go_card_manager/internal/core/ports"
 )
 
 type EmployeeUseCase struct {
-	EmployeeRepository ports2.EmployeeRepository
-	CardRepository     ports2.CardRepository
+	EmployeeRepository ports.EmployeeRepository
+	CardRepository     ports.CardRepository
 }
 
-func NewEmployeeService(u ports2.EmployeeRepository, c ports2.CardRepository) ports2.EmployeeService {
+func NewEmployeeService(u ports.EmployeeRepository, c ports.CardRepository) ports.EmployeeService {
 	return &EmployeeUseCase{
 		EmployeeRepository: u,
 		CardRepository:     c,
