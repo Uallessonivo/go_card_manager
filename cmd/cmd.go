@@ -1,13 +1,12 @@
 package cmd
 
 import (
+	"github.com/Uallessonivo/go_card_manager/internal/adapters/repositories"
+	"github.com/Uallessonivo/go_card_manager/internal/core/services"
+	"github.com/Uallessonivo/go_card_manager/internal/infra/postgres"
 	"log"
 
-	"github.com/Uallessonivo/go_card_manager/infra/database"
-	repository "github.com/Uallessonivo/go_card_manager/infra/repository"
-
 	"github.com/Uallessonivo/go_card_manager/application/routes"
-	"github.com/Uallessonivo/go_card_manager/application/usecase"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -20,27 +19,27 @@ func init() {
 }
 
 func Execute() {
-	database.ConnectDB()
+	postgres.ConnectDB()
 
 	app := fiber.New()
 
 	// USERS REPO
-	uRepo := repository.NewUserRepository(database.DB.Db)
+	uRepo := repositories.NewUserRepository(postgres.DB.Db)
 	// CARDS REPO
-	cRepo := repository.NewCardRepository(database.DB.Db)
+	cRepo := repositories.NewCardRepository(postgres.DB.Db)
 	// EMPLOYEE REPO
-	eRepo := repository.NewEmployeeRepository(database.DB.Db)
+	eRepo := repositories.NewEmployeeRepository(postgres.DB.Db)
 
 	// USERS USE CASE
-	uCase := usecase.NewUserUseCase(uRepo)
+	uCase := services.NewUserService(uRepo)
 	// CARDS USE CASE
-	cCase := usecase.NewCardUseCase(cRepo, eRepo)
+	cCase := services.NewCardService(cRepo, eRepo)
 	// EMPLOYEES USE CASE
-	eCase := usecase.NewEmployeeUseCase(eRepo, cRepo)
+	eCase := services.NewEmployeeService(eRepo, cRepo)
 	// FILE USE CASE
-	fCase := usecase.NewFileUseCase(eRepo, cRepo, cCase)
+	fCase := services.NewFileService(eRepo, cRepo, cCase)
 	// AUTH USE CASE
-	aCase := usecase.NewAuthUseCase(uCase)
+	aCase := services.NewAuthService(uCase)
 
 	// ROUTES
 	routes.UserRoutes(app, uCase)

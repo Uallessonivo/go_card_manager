@@ -1,17 +1,17 @@
 package utils
 
 import (
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/enums"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/errors"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
 	"mime/multipart"
 	"path/filepath"
 	"strings"
 
-	"github.com/Uallessonivo/go_card_manager/domain/entities"
-	"github.com/Uallessonivo/go_card_manager/domain/enums"
-	"github.com/Uallessonivo/go_card_manager/domain/errors"
 	"github.com/xuri/excelize/v2"
 )
 
-func ExtractDataFromExcelFile(file *multipart.FileHeader) ([]*entities.CardRequest, error) {
+func ExtractDataFromExcelFile(file *multipart.FileHeader) ([]*models.CardRequest, error) {
 	if filepath.Ext(file.Filename) != ".xlsx" {
 		return nil, errors.FileExtension
 	}
@@ -33,7 +33,7 @@ func ExtractDataFromExcelFile(file *multipart.FileHeader) ([]*entities.CardReque
 		"FILIAL": enums.DespesasFilial,
 	}
 
-	var cards []*entities.CardRequest
+	var cards []*models.CardRequest
 
 	for i, row := range rows {
 		if i < 1 {
@@ -43,7 +43,7 @@ func ExtractDataFromExcelFile(file *multipart.FileHeader) ([]*entities.CardReque
 		owner := strings.Replace(row[2], ".", "", -1)
 		owner = strings.Replace(owner, "-", "", -1)
 
-		cards = append(cards, &entities.CardRequest{
+		cards = append(cards, &models.CardRequest{
 			Type:   cardTypes[row[4]],
 			Serial: row[1],
 			Owner:  owner,
