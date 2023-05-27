@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"github.com/Uallessonivo/go_card_manager/domain/entities"
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
 )
 
-func CardResponse(data []*entities.Card) []*entities.CardResponse {
-	var cards []*entities.CardResponse
+func CardResponse(data []*models.Card) []*models.CardResponse {
+	var cards []*models.CardResponse
 	for _, data := range data {
-		cards = append(cards, &entities.CardResponse{
+		cards = append(cards, &models.CardResponse{
 			ID:     data.ID,
 			Type:   data.Type,
 			Owner:  data.Owner,

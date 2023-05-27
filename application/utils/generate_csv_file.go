@@ -11,10 +11,14 @@ func GenerateCSVFile(header string, rows [][]string) (*bytes.Buffer, error) {
 	writer := csv.NewWriter(buf)
 
 	columns := strings.Split(header, ",")
-	writer.Write(columns)
+
+	err := writer.Write(columns)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, row := range rows {
-		writer.Write(row)
+		_ = writer.Write(row)
 	}
 
 	writer.Flush()
@@ -23,7 +27,6 @@ func GenerateCSVFile(header string, rows [][]string) (*bytes.Buffer, error) {
 		return nil, err
 	}
 
-	defer writer.Error()
 	defer writer.Flush()
 
 	return buf, nil

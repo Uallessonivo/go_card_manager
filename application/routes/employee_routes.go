@@ -1,14 +1,14 @@
 package routes
 
 import (
-	"github.com/Uallessonivo/go_card_manager/application/handler"
-	"github.com/Uallessonivo/go_card_manager/domain/interfaces"
+	"github.com/Uallessonivo/go_card_manager/internal/adapters/handlers"
+	"github.com/Uallessonivo/go_card_manager/internal/core/ports"
 	"github.com/gofiber/fiber/v2"
 )
 
-func EmployeeRoutes(app *fiber.App, us interfaces.EmployeeUseCaseInterface) {
-	httpHandler := &handler.EmployeeHandler{
-		UseCase: us,
+func EmployeeRoutes(app *fiber.App, us ports.EmployeeService) {
+	httpHandler := &handlers.EmployeeHandler{
+		EmployeeService: us,
 	}
 
 	app.Post("/employee/create", httpHandler.CreateEmployee)
