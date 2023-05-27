@@ -6,6 +6,6 @@ import (
 
 type AuthService interface {
 	Login(input *models.LoginRequest) (*models.LoginResponse, error)
-	GenerateJWT() error
-	ValidateJWT() error
+	GenerateJWT(id string) (string, error)
+	ValidateJWT(tokenString string) error
 }

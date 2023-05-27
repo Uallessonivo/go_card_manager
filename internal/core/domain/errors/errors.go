@@ -3,6 +3,8 @@ package errors
 import "errors"
 
 var (
+	InvalidToken     = errors.New("invalid token")
+	UserNotFound     = errors.New("user not found")
 	NotFound         = errors.New("record not found")
 	OwnerNotFound    = errors.New("to create a new card the owner has to be registered")
 	AlreadyExists    = errors.New("this record already exists")

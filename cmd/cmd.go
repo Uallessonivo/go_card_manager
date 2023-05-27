@@ -39,7 +39,7 @@ func Execute() {
 	// FILE USE CASE
 	fCase := services.NewFileService(eRepo, cRepo, cCase)
 	// AUTH USE CASE
-	aCase := services.NewAuthService(uCase)
+	aCase := services.NewAuthService(uRepo)
 
 	// ROUTES
 	routes.UserRoutes(app, uCase)

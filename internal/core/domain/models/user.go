@@ -46,6 +46,13 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
+func ComparePasswords(hashedPassword string, password string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password)); err != nil {
+		return err
+	}
+	return nil
+}
+
 func ValidateUser(input *UserRequest) error {
 	if !emailIsValid(input.Email) {
 		return errors.InvalidEmail
