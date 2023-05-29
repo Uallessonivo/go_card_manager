@@ -31,7 +31,7 @@ func (a AuthUseCase) Login(input *models.LoginRequest) (*models.LoginResponse, e
 		return nil, errors.InvalidLogin
 	}
 
-	token, err := a.GenerateJWT(user.ID)
+	token, err := a.GenerateJWT(user.ID, user.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -44,10 +44,11 @@ func (a AuthUseCase) Login(input *models.LoginRequest) (*models.LoginResponse, e
 	}, nil
 }
 
-func (a AuthUseCase) GenerateJWT(id string) (string, error) {
+func (a AuthUseCase) GenerateJWT(id string, name string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": id,
-		"exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
+		"sub":  id,
+		"name": name,
+		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
