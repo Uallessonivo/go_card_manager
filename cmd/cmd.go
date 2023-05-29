@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/Uallessonivo/go_card_manager/application/middlewares"
 	"github.com/Uallessonivo/go_card_manager/internal/adapters/repositories"
 	"github.com/Uallessonivo/go_card_manager/internal/core/services"
 	"github.com/Uallessonivo/go_card_manager/internal/infra/postgres"
@@ -41,12 +42,20 @@ func Execute() {
 	// AUTH USE CASE
 	aCase := services.NewAuthService(uRepo)
 
-	// ROUTES
+	// AUTHORIZATION MIDDLEWARE INSTANCE
+	authMiddleware := middlewares.AuthMiddleware{AuthService: aCase}
+
+	// PUBLIC ROUTES
+	routes.AuthRoute(app, aCase)
+
+	// GLOBAL AUTHORIZATION MIDDLEWARE
+	app.Use(authMiddleware.Middleware())
+
+	// PRIVATE ROUTES
 	routes.UserRoutes(app, uCase)
 	routes.CardRoutes(app, cCase)
 	routes.EmployeeRoutes(app, eCase)
 	routes.FileRoutes(app, fCase)
-	routes.AuthRoute(app, aCase)
 
 	err := app.Listen(":9090")
 	if err != nil {
