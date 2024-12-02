@@ -39,7 +39,7 @@ func MakeCard(card *CardRequest, ownerName string) (*Card, error) {
 	}
 
 	if !validTypes[card.Type] {
-		return nil, errors.InvalidFields
+		return nil, errors.InvalidCardType
 	}
 
 	if len(card.Serial) != 15 || len(card.Owner) != 11 {
