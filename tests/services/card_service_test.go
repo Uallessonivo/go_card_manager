@@ -322,6 +322,66 @@ func TestListAllCardsByType_Error(t *testing.T) {
 	mockCardRepo.AssertExpectations(t)
 }
 
+func TestListAllCardsByOwner_Success(t *testing.T) {
+	// Arrange
+	mockCardRepo := new(MockCardRepository)
+	mockEmployeeRepo := new(MockEmployeeRepository)
+
+	cards := []*models.Card{
+		{
+			ID:     "1",
+			Type:   "DESPESAS_MATRIZ",
+			Owner:  "11111111111",
+			Serial: "000000000000000",
+		},
+		{
+			ID:     "2",
+			Type:   "INCENTIVO_MATRIZ",
+			Owner:  "11111111111",
+			Serial: "111111111111111",
+		},
+	}
+
+	// Mock para quando a lista de cartões for buscada
+	mockCardRepo.On("ListByOwner", cards[0].Owner).Return(cards, nil)
+
+	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
+
+	// Act
+	result, err := service.ListAllCardsByOwner(cards[0].Owner)
+
+	// Assert
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+	assert.Len(t, result, 2)
+	assert.Equal(t, "DESPESAS_MATRIZ", result[0].Type)
+	assert.Equal(t, "INCENTIVO_MATRIZ", result[1].Type)
+
+	// Verifique se todas as expectativas do mock foram cumpridas
+	mockCardRepo.AssertExpectations(t)
+}
+
+func TestListAllCardsByOwner_Error(t *testing.T) {
+	// Arrange
+	mockCardRepo := new(MockCardRepository)
+	mockEmployeeRepo := new(MockEmployeeRepository)
+
+	// Mock para quando a lista de cartões for buscada
+	mockCardRepo.On("ListByOwner", "11111111111").Return([]*models.Card(nil), errors.New("some error"))
+
+	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
+
+	// Act
+	result, err := service.ListAllCardsByOwner("11111111111")
+
+	// Assert
+	assert.Error(t, err)
+	assert.Nil(t, result)
+
+	// Verifique se todas as expectativas do mock foram cumpridas
+	mockCardRepo.AssertExpectations(t)
+}
+
 func TestDeleteCard_Success(t *testing.T) {
 	mockCardRepo := new(MockCardRepository)
 	mockEmployeeRepo := new(MockEmployeeRepository)
@@ -369,4 +429,64 @@ func TestDeleteCard_UserNotFoundError(t *testing.T) {
 	// Verifique se todas as expectativas do mock foram cumpridas
 	mockCardRepo.AssertExpectations(t)
 	mockCardRepo.AssertNotCalled(t, "Delete")
+}
+
+func TestValidateCard_Success(t *testing.T) {
+	// Arrange
+	mockCardRepo := new(MockCardRepository)
+	mockEmployeeRepo := new(MockEmployeeRepository)
+
+	employee := &models.Employee{
+		ID:   "1",
+		Name: "John",
+		Cpf:  "00000000000",
+	}
+
+	// Mock para quando o Employee for buscado
+	mockEmployeeRepo.On("Get", employee.Cpf).Return(employee, nil)
+	// Mock para quando a lista de cartões do proprietário for buscada
+	mockCardRepo.On("ListByOwner", employee.Cpf).Return([]*models.Card{}, nil)
+
+	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
+
+	// Act
+	result, err := service.ValidateCard(employee.Cpf)
+
+	// Assert
+	assert.NotEqual(t, errs.UserNotFound, err)
+	assert.NotEqual(t, errs.MaxNumberOfCards, err)
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+
+	// Verifique se todas as expectativas do mock foram cumpridas
+	mockEmployeeRepo.AssertExpectations(t)
+	mockCardRepo.AssertExpectations(t)
+}
+
+func TestValidateCard_UserNotFoundError(t *testing.T) {
+	// Arrange
+	mockCardRepo := new(MockCardRepository)
+	mockEmployeeRepo := new(MockEmployeeRepository)
+
+	employee := &models.Employee{
+		Cpf: "00000000000",
+	}
+
+	// Mock para quando o Employee for buscado
+	mockEmployeeRepo.On("Get", employee.Cpf).Return((*models.Employee)(nil), errors.New("some error"))
+
+	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
+
+	// Act
+	result, err := service.ValidateCard(employee.Cpf)
+
+	// Assert
+	assert.Nil(t, result)
+	assert.Error(t, err)
+	assert.Equal(t, errs.OwnerNotFound, err)
+
+	// Verifique se todas as expectativas do mock foram cumpridas
+	mockCardRepo.AssertNotCalled(t, "ListByOwner")
+	mockCardRepo.AssertExpectations(t)
+	mockEmployeeRepo.AssertExpectations(t)
 }
