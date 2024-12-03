@@ -2,9 +2,10 @@ package services
 
 import (
 	"bytes"
+	"os"
+
 	"github.com/Uallessonivo/go_card_manager/internal/core/domain/models"
 	"github.com/Uallessonivo/go_card_manager/internal/core/ports"
-	"os"
 
 	"github.com/Uallessonivo/go_card_manager/application/utils"
 )
@@ -50,7 +51,7 @@ func (f FileUseCase) SaveData(input []*models.CardRequest) (*models.UploadRespon
 func (f FileUseCase) GenerateCardsReport(cardType string) (*bytes.Buffer, error) {
 	header := os.Getenv("CSV_HEADER")
 
-	cards, err := f.CardRepository.ListByTYpe(cardType)
+	cards, err := f.CardRepository.ListByType(cardType)
 	if err != nil {
 		return nil, err
 	}

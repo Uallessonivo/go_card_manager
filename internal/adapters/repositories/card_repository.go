@@ -36,7 +36,7 @@ func (c *CardRepository) List() ([]*models.Card, error) {
 	return cards, nil
 }
 
-func (c *CardRepository) ListByTYpe(input string) ([]*models.Card, error) {
+func (c *CardRepository) ListByType(input string) ([]*models.Card, error) {
 	var cards []*models.Card
 
 	err := c.Db.Find(&cards, "type = ?", input).Error

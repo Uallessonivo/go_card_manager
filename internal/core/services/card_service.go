@@ -32,7 +32,7 @@ func (c CardUseCase) ListAllCards() ([]*models.CardResponse, error) {
 }
 
 func (c CardUseCase) ListAllCardsByType(input string) ([]*models.CardResponse, error) {
-	items, err := c.CardRepository.ListByTYpe(input)
+	items, err := c.CardRepository.ListByType(input)
 	if err != nil {
 		return nil, err
 	}

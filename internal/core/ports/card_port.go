@@ -17,7 +17,7 @@ type CardRepository interface {
 	Create(input *models.Card) error
 	Delete(id string) error
 	List() ([]*models.Card, error)
-	ListByTYpe(input string) ([]*models.Card, error)
+	ListByType(input string) ([]*models.Card, error)
 	ListByOwner(input string) ([]*models.Card, error)
 	GetByOwner(input string) (*models.Card, error)
 	GetById(input string) (*models.Card, error)
