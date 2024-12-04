@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/Uallessonivo/go_card_manager/internal/core/domain/errors"
 	"regexp"
+
+	"github.com/Uallessonivo/go_card_manager/internal/core/domain/errors"
 
 	"github.com/paemuri/brdoc"
 	uuid "github.com/satori/go.uuid"
@@ -37,12 +38,9 @@ func validateCpf(cpf string) bool {
 }
 
 func MakeEmployee(employee *EmployeeRequest) (*Employee, error) {
-	if !validateName(employee.Name) {
-		return nil, errors.InvalidFields
-	}
-
-	if !validateCpf(employee.Cpf) {
-		return nil, errors.InvalidFields
+	err := ValidateEmployee(employee)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Employee{
