@@ -28,7 +28,7 @@ type EmployeeResponse struct {
 }
 
 func validateName(name string) bool {
-	matched, _ := regexp.MatchString(`\b([a-zÀ-ÿA-Z][-,a-z. ']+[ ]*)+`, name)
+	matched, _ := regexp.MatchString(`^\b([a-zÀ-ÿA-Z][-,a-z. ']+[ ]*)+$`, name)
 	return matched
 }
 
@@ -52,11 +52,11 @@ func MakeEmployee(employee *EmployeeRequest) (*Employee, error) {
 
 func ValidateEmployee(employee *EmployeeRequest) error {
 	if !validateName(employee.Name) {
-		return errors.InvalidFields
+		return errors.InvalidName
 	}
 
 	if !validateCpf(employee.Cpf) {
-		return errors.InvalidFields
+		return errors.InvalidCpf
 	}
 
 	return nil
