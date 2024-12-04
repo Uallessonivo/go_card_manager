@@ -393,8 +393,9 @@ func TestDeleteCard_Success(t *testing.T) {
 		Serial: "111111111111111",
 	}
 
-	// Mock para quando a lista de cartões for buscada
+	// Mock para quando o cartão for buscado
 	mockCardRepo.On("GetById", "00000000000").Return(card, nil)
+	// Mock para quando o cartão for deletado
 	mockCardRepo.On("Delete", "00000000000").Return(nil)
 
 	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
@@ -413,7 +414,7 @@ func TestDeleteCard_UserNotFoundError(t *testing.T) {
 	mockCardRepo := new(MockCardRepository)
 	mockEmployeeRepo := new(MockEmployeeRepository)
 
-	// Mock para quando a lista de cartões for buscada
+	// Mock para quando o cartão for buscado
 	mockCardRepo.On("GetById", "00000000000").Return((*models.Card)(nil), errors.New("some error"))
 
 	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
@@ -487,6 +488,50 @@ func TestValidateCard_UserNotFoundError(t *testing.T) {
 
 	// Verifique se todas as expectativas do mock foram cumpridas
 	mockCardRepo.AssertNotCalled(t, "ListByOwner")
+	mockCardRepo.AssertExpectations(t)
+	mockEmployeeRepo.AssertExpectations(t)
+}
+
+func TestValidateCard_MaxNumberOfCardsError(t *testing.T) {
+	// Arrange
+	mockCardRepo := new(MockCardRepository)
+	mockEmployeeRepo := new(MockEmployeeRepository)
+
+	cards := []*models.Card{
+		{
+			ID:     "1",
+			Type:   "DESPESAS_MATRIZ",
+			Owner:  "11111111111",
+			Serial: "000000000000000",
+		},
+		{
+			ID:     "2",
+			Type:   "INCENTIVO_MATRIZ",
+			Owner:  "11111111111",
+			Serial: "111111111111111",
+		},
+	}
+
+	employee := &models.Employee{
+		Cpf: "00000000000",
+	}
+
+	// Mock para quando o Employee for buscado
+	mockEmployeeRepo.On("Get", employee.Cpf).Return(employee, nil)
+	// Mock para quando a lista de cartões do proprietário for buscada
+	mockCardRepo.On("ListByOwner", employee.Cpf).Return(cards, nil)
+
+	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
+
+	// Act
+	result, err := service.ValidateCard(employee.Cpf)
+
+	// Assert
+	assert.Nil(t, result)
+	assert.Error(t, err)
+	assert.Equal(t, errs.MaxNumberOfCards, err)
+
+	// Verifique se todas as expectativas do mock foram cumpridas
 	mockCardRepo.AssertExpectations(t)
 	mockEmployeeRepo.AssertExpectations(t)
 }
