@@ -34,14 +34,10 @@ func (e EmployeeUseCase) CreateEmployee(input *models.EmployeeRequest) (*models.
 		return nil, er
 	}
 
-	cardsFound, _ := e.CardRepository.ListByOwner(newEmployee.Cpf)
-	cards := utils.CardResponse(cardsFound)
-
 	return &models.EmployeeResponse{
-		ID:    newEmployee.ID,
-		Name:  newEmployee.Name,
-		Cpf:   newEmployee.Cpf,
-		Cards: cards,
+		ID:   newEmployee.ID,
+		Name: newEmployee.Name,
+		Cpf:  newEmployee.Cpf,
 	}, nil
 }
 
