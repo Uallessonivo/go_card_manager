@@ -30,17 +30,11 @@ func TestCreateCard_Success(t *testing.T) {
 	}
 
 	// Mock para quando o Employee for buscado
-	mockEmployeeRepo.On("Get", "00000000000").Return(employee, nil)
+	mockEmployeeRepo.On("Get", input.Owner).Return(employee, nil)
 	// Mock para quando a lista de cartões do proprietário for buscada
-	mockCardRepo.On("ListByOwner", "00000000000").Return([]*models.Card{}, nil)
+	mockCardRepo.On("ListByOwner", input.Owner).Return([]*models.Card{}, nil)
 	// Mock para quando o método Create for chamado
-	mockCardRepo.On("Create", mock.Anything).Return(nil).Run(func(args mock.Arguments) {
-		// Verifique se o novo card criado tem os valores corretos
-		card := args.Get(0).(*models.Card)
-		assert.Equal(t, "DESPESAS_MATRIZ", card.Type)
-		assert.Equal(t, input.Owner, card.Owner)
-		assert.Equal(t, input.Serial, card.Serial)
-	})
+	mockCardRepo.On("Create", mock.Anything).Return(nil)
 
 	service := services.NewCardService(mockCardRepo, mockEmployeeRepo)
 
@@ -50,11 +44,15 @@ func TestCreateCard_Success(t *testing.T) {
 	// Assert
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
-	assert.Equal(t, "DESPESAS_MATRIZ", result.Type)
+	assert.Equal(t, string(input.Type), result.Type)
 	assert.Equal(t, input.Owner, result.Owner)
 	assert.Equal(t, input.Serial, result.Serial)
+	assert.NotEmpty(t, result.ID)
 
-	// Verifique se todas as expectativas do mock foram cumpridas
+	// Certificando que os mocks foram chamados corretamente
+	mockEmployeeRepo.AssertCalled(t, "Get", input.Owner)
+	mockCardRepo.AssertCalled(t, "ListByOwner", input.Owner)
+	mockCardRepo.AssertCalled(t, "Create", mock.Anything)
 	mockEmployeeRepo.AssertExpectations(t)
 	mockCardRepo.AssertExpectations(t)
 }
