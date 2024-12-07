@@ -238,3 +238,73 @@ func TestListCardsByTypeHandler_Error(t *testing.T) {
 	// Verify all expectations
 	mockService.AssertExpectations(t)
 }
+
+func TestDeleteCardHandler_Success(t *testing.T) {
+	// Arrange
+	app := fiber.New()
+
+	// Mock Service
+	mockService := new(MockCardService)
+
+	// Mock DeleteCard method
+	mockService.On("DeleteCard", "1").Return(nil)
+
+	// Create handler to register route
+	handler := &handlers.CardHandler{
+		CardService: mockService,
+	}
+
+	app.Delete("/card/delete/:id", handler.DeleteCard)
+
+	// Http request using httptest
+	req := httptest.NewRequest("DELETE", "/card/delete/1", nil)
+
+	// Act: Send request to the handler
+	resp, err := app.Test(req, -1)
+	assert.NoError(t, err)
+
+	// Assert
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	// Verify response body
+	var result string
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	assert.NoError(t, err)
+	assert.Equal(t, "OK", result)
+	// Verify all expectations
+	mockService.AssertExpectations(t)
+}
+
+func TestDeleteCardHandler_Error(t *testing.T) {
+	// Arrange
+	app := fiber.New()
+
+	// Mock Service
+	mockService := new(MockCardService)
+
+	// Mock DeleteCard method to return an error
+	mockService.On("DeleteCard", "1").Return(errors.New("service error"))
+
+	// Create handler to register route
+	handler := &handlers.CardHandler{
+		CardService: mockService,
+	}
+
+	app.Delete("/card/delete/:id", handler.DeleteCard)
+
+	// Http request using httptest
+	req := httptest.NewRequest("DELETE", "/card/delete/1", nil)
+
+	// Act: Send request to the handler
+	resp, err := app.Test(req, -1)
+	assert.NoError(t, err)
+
+	// Assert
+	assert.Equal(t, http.StatusNotFound, resp.StatusCode)
+	// Verify response body
+	var result map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	assert.NoError(t, err)
+	assert.Equal(t, "service error", result["error"])
+	// Verify all expectations
+	mockService.AssertExpectations(t)
+}
